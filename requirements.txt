@@ -1,0 +1,5 @@
+python>=3.10
+r-base>=4.3
+snakemake-minimal
+r-tidyverse
+r-drc
