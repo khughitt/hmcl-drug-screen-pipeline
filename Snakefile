@@ -19,7 +19,10 @@ rule normalize_plates:
     input:
         out_dir.joinpath("drug_plates/combined/raw.tsv"),
         out_dir.joinpath("metadata/plate-metadata.tsv"),
+    params:
+        plate_ids=plate_ids
     output:
+        out_dir.joinpath("drug_plates/combined/normed.tsv"),
         expand(out_dir.joinpath("drug_plates/{plate}/01-raw.tsv"), plate=plate_ids),
         expand(out_dir.joinpath("drug_plates/{plate}/02-normed.tsv"), plate=plate_ids),
     script:

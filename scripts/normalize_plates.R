@@ -3,17 +3,12 @@
 #
 library(tidyverse)
 
-#plate_mat <- read_tsv("../output/drug_plates/raw.tsv.gz", show_col_types=FALSE) %>%
-plate_mat <- read_tsv(snakemake@input[[1]], show_col_types=FALSE) %>%
+combined_mat <- read_tsv(snakemake@input[[1]], show_col_types=FALSE) %>%
   as.matrix()
 
-# plate_mdata <- read_tsv("../output/metadata/plate-metadata.tsv", show_col_types=FALSE)
 plate_mdata <- read_tsv(snakemake@input[[2]], show_col_types=FALSE)
 
 out_dir <- dirname(dirname(snakemake@output[[1]]))
-
-# determine list of output plate ids; allows subset of plates to be used during development
-plate_ids <- unique(basename(dirname(unlist(snakemake@output))))
 
 #
 # constants
@@ -32,18 +27,21 @@ cnames <- c("DMSO", "Pos1", "Pos2", "Neg",
 # quantile to clip upper values at
 clip_quantile <- 0.995
 
+# create a copy of the raw combined plate matrix to store normalized version
+combined_mat_normed <- combined_mat
+
 # for each plate:
 #  1. compute mean positive control
 #  2. compute mean negitive control
 #  3. apply norm eqn to all cells
-for (plate_id in plate_ids) {
+for (plate_id in snakemake@params[["plate_ids"]]) {
   out_dir_plate <- file.path(out_dir, plate_id)
 
   cell_line <- plate_mdata %>%
     filter(plate == plate_id) %>%
     pull(cell_line)
 
-  plate_raw <- matrix(plate_mat[, plate_id], nrow=PLATE_NUM_ROWS, ncol=PLATE_NUM_COLS)
+  plate_raw <- matrix(combined_mat[, plate_id], nrow=PLATE_NUM_ROWS, ncol=PLATE_NUM_COLS)
 
   colnames(plate_raw) <- cnames
 
@@ -63,7 +61,13 @@ for (plate_id in plate_ids) {
   # normalized viability (%)=100 * ( well - pos control ) / ( neg control - pos control)
   plate_normed <- 100 * (plate_normed - median_pos) / (median_neg - median_pos)
 
+  # same thing, but applied to the columns of the "combined" plate matrix
+  combined_mat_normed[, plate_id] <- 100 * (combined_mat_normed[, plate_id] - median_pos) / (median_neg - median_pos)
+
   # save raw and normalized plate matrices
   write_tsv(as.data.frame(plate_raw), file.path(out_dir_plate, "01-raw.tsv"))
   write_tsv(as.data.frame(plate_normed), file.path(out_dir_plate, "02-normed.tsv"))
 }
+
+# store normalized version of combined matrix
+write_tsv(as.data.frame(combined_mat_normed), snakemake@output[[1]])
