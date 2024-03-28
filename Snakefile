@@ -18,12 +18,14 @@ plate_ids = set(dat.plate)
 # TESTING
 plate_ids = list(plate_ids)[:3]
 
-# rule background_adjustment:
-#     input:
-#         out_dir.joinpath("drug_plates/combined/normed.tsv"),
-#     output:
-#         out_dir.joinpath("drug_plates/combined/background_adjusted.tsv"),
-#         expand(out_dir.joinpath("drug_plates/{plate}/03-background_adjusted.tsv"), plate=plate_ids),
+rule background_adjustment:
+    input:
+        out_dir.joinpath("drug_plates/combined/normed.tsv"),
+    output:
+        out_dir.joinpath("drug_plates/background.tsv"),
+        out_dir.joinpath("drug_plates/combined/background_adjusted.tsv"),
+    script:
+        "scripts/background_adjustment.R"
 
 rule normalize_plates:
     input:
