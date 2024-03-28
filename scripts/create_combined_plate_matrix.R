@@ -9,22 +9,18 @@ library(tidyverse)
 #
 # constants
 #
-num_drugs <- 1912
-num_plates_per_cell_line <- 15
-plate_num_rows <- 32
-plate_num_cols <- 48
-num_drugs_per_row <- 4
-num_control_wells <- 4
-num_doses <- 11
-
-plate_drug_base_cols <- c(25, 26, 47, 48)      # columns containing highest concentrations for each drug
-plate_drug_rel_offsets <- seq(0, -20, by = -2) # positions of well indices relative to base column
+NUM_PLATES_PER_CELL_LINE <- 15
+PLATE_NUM_DRUGS_PER_ROW <- 4
+PLATE_NUM_ROWS <- 32
+PLATE_NUM_COLS <- 48
+PLATE_DRUG_BASE_COLS   <- c(25, 26, 47, 48)  # columns containing highest concentrations for each drug
+PLATE_DRUG_REL_OFFSETS <- seq(0, -20, by=-2) # positions of well indices relative to base column
 
 # maximum number of drugs tested per cell line
-max_num_drugs_tested <- num_plates_per_cell_line * plate_num_rows * num_drugs_per_row
+max_num_drugs_tested <- NUM_PLATES_PER_CELL_LINE * PLATE_NUM_ROWS * PLATE_NUM_DRUGS_PER_ROW
 
 # load raw plate data
-raw_plate_dat <- read_tsv(snakemake@input[[1]], show_col_types = FALSE)
+raw_plate_dat <- read_tsv(snakemake@input[[1]], show_col_types=FALSE)
 
 # create a list with date for each plate stored as a separate entry
 plates <- list()
@@ -37,7 +33,7 @@ for (plate_id in unique(raw_plate_dat$plate)) {
   dat <- raw_plate_dat %>%
     filter(plate == plate_id) %>%
     pull(well_value)
-  plates[[plate_id]] <- matrix(dat, plate_num_rows, plate_num_cols, byrow = TRUE)
+  plates[[plate_id]] <- matrix(dat, PLATE_NUM_ROWS, PLATE_NUM_COLS, byrow=TRUE)
 }
 
 # create a mapping from plate -> cell & drugs
@@ -48,7 +44,7 @@ plate_mapping <- raw_plate_dat %>%
 
 plate_mapping$date <- factor(plate_mapping$date)
 
-# plates generates on the two earliest dates are missing some control columns
+# plates from the two earliest dates are missing some control columns
 plate_mapping$incomplete_controls <- as.character(plate_mapping$date) %in% c("2013-09-09", "2013-09-18")
 
 # create a simple table showing which drugs & cell lines were used for each plate
@@ -56,7 +52,7 @@ plate_mapping <- raw_plate_dat %>%
   group_by(cell_line, sample_id) %>%
   arrange(desc(col)) %>%
   slice(1) %>%
-  select(plate, cell_line, drug_id = sample_id) %>%
+  select(plate, cell_line, drug_id=sample_id) %>%
   ungroup
 
 # for each plate, 128 different drugs were applied; while the 128 drugs were chosen at random, the
@@ -69,12 +65,12 @@ plate_mapping <- raw_plate_dat %>%
 drug_groups <- plate_mapping %>%
   group_by(plate) %>%
   arrange(drug_id) %>%
-  summarise(drug_group = paste(drug_id, collapse = ", "))
+  summarise(drug_group=paste(drug_id, collapse=", "))
 
 num_groups <- length(unique(drug_groups$drug_group))
 
-drug_groups$drug_group <- factor(drug_groups$drug_group, labels = sprintf("Drug Group %d",
-                                                                          seq_len(num_groups)))
+drug_groups$drug_group <- factor(drug_groups$drug_group, labels=sprintf("Drug Group %d",
+                                                                        seq_len(num_groups)))
 
 # create a table mapping from "drug group" -> drug
 drug_group_members <- list()
@@ -93,7 +89,7 @@ for (group_id in sort(unique(drug_groups$drug_group))) {
 }
 
 drug_group_mapping <- stack(drug_group_members) %>%
-  select(drug_group = ind, ncgc_id = values) %>%
+  select(drug_group=ind, ncgc_id=values) %>%
   filter(ncgc_id != "DMSO")
 
 # next, each plate is scored based on how often viability measurements match an idealized sigmoidal
@@ -111,12 +107,12 @@ for (plate_id in names(plates)) {
   plate_scores[[plate_id]] <- c()
 
   # iterate over rows on plate
-  for (row_num in 1:plate_num_rows) {
+  for (row_num in 1:PLATE_NUM_ROWS) {
     # iterate over drugs on row
-    for (col_offset in plate_drug_base_cols) {
+    for (col_offset in PLATE_DRUG_BASE_COLS) {
       # viability scores for a single drug (from lowest -> highest concentration);
       # each drug has 11 doses, and is zebra-striped with another drug
-      col_indices <- col_offset + plate_drug_rel_offsets
+      col_indices <- col_offset + PLATE_DRUG_REL_OFFSETS
       viability_scores <- plates[[plate_id]][row_num, col_indices]
 
       # compute correlation between actual and idealized viability scores
@@ -130,21 +126,21 @@ for (plate_id in names(plates)) {
 
 # median quality score for 128 drugs on each plate
 median_plate_scores <- sapply(plate_scores, median) %>%
-  enframe(name = "plate", value = "quality")
+  enframe(name="plate", value="quality")
 
 # create a plate metadata table
 plate_mdata <- plate_mapping %>%
   select(plate, cell_line) %>%
   distinct() %>%
-  inner_join(drug_groups, by = "plate") %>%
-  inner_join(median_plate_scores, by = "plate")
+  inner_join(drug_groups, by="plate") %>%
+  inner_join(median_plate_scores, by="plate")
 
 # next, a combined "all plate" matrix is generated with all well values for a single plate stored
 # as a 1d column vector;
 # this is a useful format for making comparisons across plates
 
 # initialize an empty matrix to final result
-plate_mat <- matrix(0, nrow = plate_num_rows * plate_num_cols, ncol = length(plates))
+plate_mat <- matrix(0, nrow=PLATE_NUM_ROWS * PLATE_NUM_COLS, ncol=length(plates))
 
 colnames(plate_mat) <- names(plates)
 
