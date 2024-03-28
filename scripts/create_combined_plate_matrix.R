@@ -148,6 +148,11 @@ for (plate_id in names(plates)) {
   plate_mat[, plate_id] <- as.vector(plates[[plate_id]])
 }
 
+# exclude plates outside of requested ones; useful during development
+plate_mat <- plate_mat[, snakemake@params[["plate_ids"]]]
+plate_mdata <- plate_mdata %>%
+  filter(plate %in% snakemake@params[["plate_ids"]])
+
 # write outputs
 write_tsv(as.data.frame(plate_mat), snakemake@output[[1]])
 write_tsv(plate_mdata, snakemake@output[[2]])

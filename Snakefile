@@ -15,16 +15,21 @@ dat = pd.read_csv("data/raw.tsv.gz", sep="\t")
 cell_lines = set(dat.cell_line)
 plate_ids = set(dat.plate)
 
+# TESTING
+plate_ids = list(plate_ids)[:3]
+
+# rule background_adjustment:
+#     input:
+#         out_dir.joinpath("drug_plates/combined/normed.tsv"),
+#     output:
+#         out_dir.joinpath("drug_plates/combined/background_adjusted.tsv"),
+#         expand(out_dir.joinpath("drug_plates/{plate}/03-background_adjusted.tsv"), plate=plate_ids),
+
 rule normalize_plates:
     input:
         out_dir.joinpath("drug_plates/combined/raw.tsv"),
-        out_dir.joinpath("metadata/plate-metadata.tsv"),
-    params:
-        plate_ids=plate_ids
     output:
         out_dir.joinpath("drug_plates/combined/normed.tsv"),
-        expand(out_dir.joinpath("drug_plates/{plate}/01-raw.tsv"), plate=plate_ids),
-        expand(out_dir.joinpath("drug_plates/{plate}/02-normed.tsv"), plate=plate_ids),
     script:
         "scripts/normalize_plates.R"
 
@@ -35,5 +40,7 @@ rule create_combined_plate_matrix:
         out_dir.joinpath("drug_plates/combined/raw.tsv"),
         out_dir.joinpath("metadata/plate-metadata.tsv"),
         out_dir.joinpath("metadata/drug-groups.tsv"),
+    params:
+        plate_ids=plate_ids
     script:
         "scripts/create_combined_plate_matrix.R"
