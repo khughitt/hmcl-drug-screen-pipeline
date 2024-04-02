@@ -1,8 +1,9 @@
 #
-# create_drug_plate_matrix.R
+# create_plate_matrices.R
 #
-# Creates a matrix containing 1d representations each drug plate.
-# This is useful as an intermediate format, and makes it easy to compare plates with each other.
+# Creates matrices containing 1d representations of the concentrations and measurements for
+# each drug plate, as well as some basic metadata relating to the plates and sets of drugs used
+# together for the same plates.
 #
 library(tidyverse)
 
@@ -22,18 +23,24 @@ max_num_drugs_tested <- NUM_PLATES_PER_CELL_LINE * PLATE_NUM_ROWS * PLATE_NUM_DR
 # load raw plate data
 raw_plate_dat <- read_tsv(snakemake@input[[1]], show_col_types=FALSE)
 
-# create a list with date for each plate stored as a separate entry
-plates <- list()
+# create lists to store well & concentration values for each plate
+plate_vals <- list()
+plate_conc <- list()
 
 # order by plate_id, row, and column
 raw_plate_dat <- raw_plate_dat %>%
   arrange(plate, row, col)
 
 for (plate_id in unique(raw_plate_dat$plate)) {
-  dat <- raw_plate_dat %>%
+  well_vals <- raw_plate_dat %>%
     filter(plate == plate_id) %>%
     pull(well_value)
-  plates[[plate_id]] <- matrix(dat, PLATE_NUM_ROWS, PLATE_NUM_COLS, byrow=TRUE)
+  plate_vals[[plate_id]] <- matrix(well_vals, PLATE_NUM_ROWS, PLATE_NUM_COLS, byrow=TRUE)
+
+  conc_vals <- raw_plate_dat %>%
+    filter(plate == plate_id) %>%
+    pull(concentration)
+  plate_conc[[plate_id]] <- matrix(conc_vals, PLATE_NUM_ROWS, PLATE_NUM_COLS, byrow=TRUE)
 }
 
 # create a mapping from plate -> cell & drugs
@@ -102,7 +109,7 @@ plate_scores <- list()
 x <- -5:5
 idealized_viability_scores <- rev(1 / (1 + exp(-x)))
 
-for (plate_id in names(plates)) {
+for (plate_id in names(plate_vals)) {
   # create an empty vector to store drug behavior scores for each plate
   plate_scores[[plate_id]] <- c()
 
@@ -113,7 +120,7 @@ for (plate_id in names(plates)) {
       # viability scores for a single drug (from lowest -> highest concentration);
       # each drug has 11 doses, and is zebra-striped with another drug
       col_indices <- col_offset + PLATE_DRUG_REL_OFFSETS
-      viability_scores <- plates[[plate_id]][row_num, col_indices]
+      viability_scores <- plate_vals[[plate_id]][row_num, col_indices]
 
       # compute correlation between actual and idealized viability scores
       drug_score <- cor(viability_scores, idealized_viability_scores)
@@ -135,25 +142,31 @@ plate_mdata <- plate_mapping %>%
   inner_join(drug_groups, by="plate") %>%
   inner_join(median_plate_scores, by="plate")
 
-# next, a combined "all plate" matrix is generated with all well values for a single plate stored
-# as a 1d column vector;
-# this is a useful format for making comparisons across plates
+# next, "combined" plate measurement and concentration matrices are created where
+# each column corresponds to a 1d vector representation of well values or concentrations for
+# a single plate.
 
-# initialize an empty matrix to final result
-plate_mat <- matrix(0, nrow=PLATE_NUM_ROWS * PLATE_NUM_COLS, ncol=length(plates))
+# initialize empty matrices to well & concentration data tables
+well_mat <- matrix(0, nrow=PLATE_NUM_ROWS * PLATE_NUM_COLS, ncol=length(plate_vals))
+conc_mat <- matrix(0, nrow=PLATE_NUM_ROWS * PLATE_NUM_COLS, ncol=length(plate_conc))
 
-colnames(plate_mat) <- names(plates)
+colnames(well_mat) <- names(plate_vals)
+colnames(conc_mat) <- names(plate_conc)
 
-for (plate_id in names(plates)) {
-  plate_mat[, plate_id] <- as.vector(plates[[plate_id]])
+for (plate_id in names(plate_vals)) {
+  well_mat[, plate_id] <- as.vector(plate_vals[[plate_id]])
+  conc_mat[, plate_id] <- as.vector(plate_conc[[plate_id]])
 }
 
 # exclude plates outside of requested ones; useful during development
-plate_mat <- plate_mat[, snakemake@params[["plate_ids"]]]
+well_mat <- well_mat[, snakemake@params[["plate_ids"]]]
+conc_mat <- conc_mat[, snakemake@params[["plate_ids"]]]
+
 plate_mdata <- plate_mdata %>%
   filter(plate %in% snakemake@params[["plate_ids"]])
 
 # write outputs
-write_tsv(as.data.frame(plate_mat), snakemake@output[[1]])
-write_tsv(plate_mdata, snakemake@output[[2]])
-write_tsv(drug_group_mapping, snakemake@output[[3]])
+write_tsv(as.data.frame(well_mat), snakemake@output[[1]])
+write_tsv(as.data.frame(conc_mat), snakemake@output[[2]])
+write_tsv(plate_mdata, snakemake@output[[3]])
+write_tsv(drug_group_mapping, snakemake@output[[4]])
