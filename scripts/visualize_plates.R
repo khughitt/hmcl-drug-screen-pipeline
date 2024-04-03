@@ -14,6 +14,9 @@ cnames <- c("DMSO", "Pos1", "Pos2", "Neg",
             paste0(c("Drug4_dose", "Drug3_dose"), rep(10:0, each=2)),
             paste0(c("Drug2_dose", "Drug1_dose"), rep(10:0, each=2)))
 
+# legend size
+legend_params <- list(labels=list(cex=2))
+
 # load plate data
 raw_combined <- read_tsv(snakemake@input[[1]], show_col_types=FALSE) %>%
   as.matrix()
@@ -60,17 +63,23 @@ for (plate_id in snakemake@params[["plate_ids"]]) {
 
   plts[[1]] <- levelplot(t(raw_plate), col.regions=plasma(500),
                          scales=list(x=list(rot=90)),
+                         xlab="", ylab="",
                          cex.axis=0.6,
+                         colorkey=legend_params,
                          main="Raw")
 
   plts[[2]] <- levelplot(t(normed_plate), col.regions=plasma(500),
                          scales=list(x=list(rot=90)),
-                         xlab="", ylab="", cex.axis=0.6,
+                         xlab="", ylab="",
+                         cex.axis=0.6,
+                         colorkey=legend_params,
                          main="Normed")
 
   plts[[3]] <- levelplot(t(bgadj_plate), col.regions=plasma(500),
                          scales=list(x=list(rot=90)),
-                         xlab="", ylab="", cex.axis=0.6,
+                         xlab="", ylab="",
+                         cex.axis=0.6,
+                         colorkey=legend_params,
                          main="Background-adjusted")
 
   grid.arrange(grobs=plts, nrow=2, top=plt_title)
@@ -79,11 +88,15 @@ for (plate_id in snakemake@params[["plate_ids"]]) {
 
 # visualize mean & median of stacked raw plate images
 mean_plate <- matrix(apply(raw_combined, 1, mean), nrow=PLATE_NUM_ROWS)
+
 colnames(mean_plate) <- cnames
 
 png(snakemake@output$mean, width=1920, height=1080)
 levelplot(t(mean_plate), col.regions=plasma(500),
-          scales=list(x=list(rot=90)), cex.axis=0.6,
+          scales=list(x=list(rot=90)),
+          xlab="", ylab="",
+          colorkey=legend_params,
+          cex.axis=0.6,
           main="Raw plates (mean)")
 dev.off()
 
@@ -92,13 +105,19 @@ colnames(median_plate) <- cnames
 
 png(snakemake@output$median, width=1920, height=1080)
 levelplot(t(median_plate), col.regions=plasma(500),
-          scales=list(x=list(rot=90)), cex.axis=0.6,
+          scales=list(x=list(rot=90)),
+          xlab="", ylab="",
+          colorkey=legend_params,
+          cex.axis=0.6,
           main="Raw plates (median)")
 dev.off()
 
 # visualize background image
 png(snakemake@output$background, width=1920, height=1080)
 levelplot(t(background_plate), col.regions=plasma(500),
-          scales=list(x=list(rot=90)), cex.axis=0.6,
+          scales=list(x=list(rot=90)),
+          xlab="", ylab="",
+          colorkey=legend_params,
+          cex.axis=0.6,
           main="Background Image")
 dev.off()
