@@ -57,6 +57,7 @@ rule create_plate_matrices:
         out_dir.joinpath("drug_plates/raw.tsv"),
         out_dir.joinpath("drug_plates/concentrations.tsv"),
         out_dir.joinpath("metadata/plate-metadata.tsv"),
+        out_dir.joinpath("metadata/drug-indices.tsv"),
         out_dir.joinpath("metadata/drug-groups.tsv"),
     params:
         plate_ids=plate_ids

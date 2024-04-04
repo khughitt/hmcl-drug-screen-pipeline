@@ -20,8 +20,22 @@ PLATE_DRUG_REL_OFFSETS <- seq(0, -20, by=-2) # positions of well indices relativ
 # maximum number of drugs tested per cell line
 max_num_drugs_tested <- NUM_PLATES_PER_CELL_LINE * PLATE_NUM_ROWS * PLATE_NUM_DRUGS_PER_ROW
 
+# column types
+ctypes <- cols(
+  cell_line = col_factor(),
+  date = col_date(),
+  experiment = col_factor(),
+  plate = col_factor(),
+  layer_name = col_factor(),
+  row = col_integer(),
+  col = col_integer(),
+  well_value = col_double(),
+  sample_id = col_character(),
+  concentration = col_double()
+)
+
 # load raw plate data
-raw_plate_dat <- read_tsv(snakemake@input[[1]], show_col_types=FALSE)
+raw_plate_dat <- read_tsv(snakemake@input[[1]], col_types = ctypes)
 
 # create lists to store well & concentration values for each plate
 plate_vals <- list()
@@ -43,23 +57,12 @@ for (plate_id in unique(raw_plate_dat$plate)) {
   plate_conc[[plate_id]] <- matrix(conc_vals, PLATE_NUM_ROWS, PLATE_NUM_COLS, byrow=TRUE)
 }
 
-# create a mapping from plate -> cell & drugs
-plate_mapping <- raw_plate_dat %>%
-  dplyr::select(plate, cell_line, date, experiment, layer_name) %>%
-  group_by(plate) %>%
-  slice(1)
-
-plate_mapping$date <- factor(plate_mapping$date)
-
-# plates from the two earliest dates are missing some control columns
-plate_mapping$incomplete_controls <- as.character(plate_mapping$date) %in% c("2013-09-09", "2013-09-18")
-
 # create a simple table showing which drugs & cell lines were used for each plate
-plate_mapping <- raw_plate_dat %>%
+plate_mdata <- raw_plate_dat %>%
   group_by(cell_line, sample_id) %>%
   arrange(desc(col)) %>%
   slice(1) %>%
-  select(plate, cell_line, drug_id=sample_id) %>%
+  select(plate, cell_line, date, drug_id=sample_id) %>%
   ungroup
 
 # for each plate, 128 different drugs were applied; while the 128 drugs were chosen at random, the
@@ -69,7 +72,7 @@ plate_mapping <- raw_plate_dat %>%
 # due to the specific set of drugs applied.
 # note that because the number of drugs tested is not a multiple of 128, there is also one drug
 # group / set of plates with fewer drugs applied.
-drug_groups <- plate_mapping %>%
+drug_groups <- plate_mdata %>%
   group_by(plate) %>%
   arrange(drug_id) %>%
   summarise(drug_group=paste(drug_id, collapse=", "))
@@ -88,7 +91,7 @@ for (group_id in sort(unique(drug_groups$drug_group))) {
     head(1) %>%
     pull(plate)
 
-  drug_group_members[[group_id]] <- plate_mapping %>%
+  drug_group_members[[group_id]] <- plate_mdata %>%
     filter(plate == plate_id) %>%
     pull(drug_id) %>%
     unique() %>%
@@ -136,11 +139,14 @@ median_plate_scores <- sapply(plate_scores, median) %>%
   enframe(name="plate", value="quality")
 
 # create a plate metadata table
-plate_mdata <- plate_mapping %>%
-  select(plate, cell_line) %>%
+plate_mdata <- plate_mdata %>%
+  select(plate, date, cell_line) %>%
   distinct() %>%
   inner_join(drug_groups, by="plate") %>%
   inner_join(median_plate_scores, by="plate")
+
+# plates from the two earliest dates are missing some control columns
+plate_mdata$incomplete_controls <- as.character(plate_mdata$date) %in% c("2013-09-09", "2013-09-18")
 
 # next, "combined" plate measurement and concentration matrices are created where
 # each column corresponds to a 1d vector representation of well values or concentrations for
@@ -158,9 +164,27 @@ for (plate_id in names(plate_vals)) {
   conc_mat[, plate_id] <- as.vector(plate_conc[[plate_id]])
 }
 
+# create a table mapping from drug -> plate + row/column indices of the lowest dose
+drug_pos <- raw_plate_dat %>%
+  select(plate, cell_line, drug_id=sample_id, concentration, row, col) %>%
+  filter(drug_id != "DMSO") %>%
+  group_by(cell_line, drug_id) %>%
+  slice(which.min(concentration))
+
+# create a table containing the indices and concetrations of each drug dose
+drug_inds <- raw_plate_dat %>%
+  select(plate, cell_line, drug_id=sample_id, concentration, row, col) %>%
+  filter(drug_id != "DMSO") %>%
+  group_by(cell_line, drug_id) %>%
+  mutate(dose = dense_rank(concentration)) %>%
+  arrange(cell_line, drug_id, dose)
+
 # exclude plates outside of requested ones; useful during development
 well_mat <- well_mat[, snakemake@params[["plate_ids"]]]
 conc_mat <- conc_mat[, snakemake@params[["plate_ids"]]]
+
+drug_inds <- drug_inds %>%
+  filter(plate %in% snakemake@params[["plate_ids"]])
 
 plate_mdata <- plate_mdata %>%
   filter(plate %in% snakemake@params[["plate_ids"]])
@@ -169,4 +193,5 @@ plate_mdata <- plate_mdata %>%
 write_tsv(as.data.frame(well_mat), snakemake@output[[1]])
 write_tsv(as.data.frame(conc_mat), snakemake@output[[2]])
 write_tsv(plate_mdata, snakemake@output[[3]])
-write_tsv(drug_group_mapping, snakemake@output[[4]])
+write_tsv(drug_inds, snakemake@output[[4]])
+write_tsv(drug_group_mapping, snakemake@output[[5]])
