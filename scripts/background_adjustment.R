@@ -11,9 +11,9 @@ PLATE_NUM_ROWS <- 32
 NUM_CONTROL_WELLS <- 4
 
 # plate column names
-cnames <- c("DMSO", "Pos1", "Pos2", "Neg",
-            paste0(c("Drug4_dose", "Drug3_dose"), rep(10:0, each=2)),
-            paste0(c("Drug2_dose", "Drug1_dose"), rep(10:0, each=2)))
+cnames <- c("dmso", "pos1", "pos2", "neg",
+            paste0(c("drug4_dose", "drug3_dose"), rep(10:0, each=2)),
+            paste0(c("drug2_dose", "drug1_dose"), rep(10:0, each=2)))
 
 # average wells across all plates; each row corresponds to a single <x, y> plate position,
 # so here we are just finding the average values for each such position across all plates

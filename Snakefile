@@ -16,6 +16,15 @@ dat = pd.read_csv("data/raw.tsv.gz", sep="\t")
 cell_lines = set(dat.cell_line)
 plate_ids = set(dat.plate)
 
+rule fit_dose_response_curves:
+    input:
+        out_dir.joinpath("drug_plates/background_adjusted.tsv"),
+        out_dir.joinpath("metadata/drug-indices.tsv"),
+    output:
+        out_dir.joinpath("drug_curves/drug_curves.tsv"),
+    script:
+        "scripts/fit_dose_response_curves.R"
+
 rule visualize_plates:
     input:
         out_dir.joinpath("drug_plates/raw.tsv"),
