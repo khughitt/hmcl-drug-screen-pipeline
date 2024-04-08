@@ -12,6 +12,7 @@ library(tidyverse)
 #
 NUM_PLATES_PER_CELL_LINE <- 15
 NUM_CONTROLS <- 4
+LAST_PLATE_NUM_MEAS <- 1320
 PLATE_CONTROL_INDICES <- 1:4
 PLATE_NUM_DRUGS_PER_ROW <- 4
 PLATE_NUM_ROWS <- 32
@@ -221,6 +222,17 @@ drug_inds <- raw_plate_dat %>%
   group_by(cell_line, drug_id) %>%
   mutate(dose = dense_rank(concentration)) %>%
   arrange(cell_line, drug_id, dose)
+
+# for each cell line, the last plate tested includes fewer drugs tested (120 drugs / 1320
+# measurements vs 128 drugs / 1408 measurements for other plates)
+# these plates are detected and indicated in the plate metadata table
+last_plate_ids <- drug_inds %>%
+  group_by(plate) %>%
+  summarize(n=n()) %>%
+  filter(n == LAST_PLATE_NUM_MEAS) %>%
+  pull(plate)
+
+plate_mdata$last_plate <- plate_mdata$plate %in% last_plate_ids
 
 # exclude plates outside of requested ones; useful during development
 well_mat <- well_mat[, snakemake@params[["plate_ids"]]]
