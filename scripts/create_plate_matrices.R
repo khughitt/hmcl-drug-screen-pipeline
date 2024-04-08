@@ -11,6 +11,8 @@ library(tidyverse)
 # constants
 #
 NUM_PLATES_PER_CELL_LINE <- 15
+NUM_CONTROLS <- 4
+PLATE_CONTROL_INDICES <- 1:4
 PLATE_NUM_DRUGS_PER_ROW <- 4
 PLATE_NUM_ROWS <- 32
 PLATE_NUM_COLS <- 48
@@ -138,15 +140,56 @@ for (plate_id in names(plate_vals)) {
 median_plate_scores <- sapply(plate_scores, median) %>%
   enframe(name="plate", value="quality")
 
-# create a plate metadata table
+# add drug gruops and plate scores to plate metadata
 plate_mdata <- plate_mdata %>%
   select(plate, date, cell_line) %>%
   distinct() %>%
   inner_join(drug_groups, by="plate") %>%
   inner_join(median_plate_scores, by="plate")
 
-# plates from the two earliest dates are missing some control columns
-plate_mdata$incomplete_controls <- as.character(plate_mdata$date) %in% c("2013-09-09", "2013-09-18")
+# compute average viability of control wells
+control_averages_vec <- c()
+
+for (plate_id in names(plate_vals)) {
+  control_averages_vec <- c(control_averages_vec,
+                            colMeans(plate_vals[[plate_id]][, PLATE_CONTROL_INDICES]))
+}
+
+control_averages <- matrix(control_averages_vec, nrow=length(plate_vals), byrow=TRUE) %>%
+  as.data.frame()
+
+colnames(control_averages) <- sprintf("control%d_mean", 1:NUM_CONTROLS)
+
+# convert to z-scores
+control_zscores <- as.data.frame(scale(control_averages))
+
+num_stds <- 3
+num_outliers <- rowSums(abs(control_zscores) > num_stds)
+names(num_outliers) <- names(plate_vals)
+
+# add column indicating the number of control columns with average well values
+# three standard deviations away from the column averages across all plates
+plate_mdata$num_control_outliers <- num_outliers[match(plate_mdata$plate,
+                                                       names(num_outliers))]
+
+# based on the above, plates from one experimental date and two cell lines were found to
+# have unexpected control behavior, possibly due to DMSO resistance or a problem distributing the
+# drug (cell lines: MM1S_ATCC, U266_ATCC)
+plate_mdata$incomplete_controls <- plate_mdata$date == "2013-09-18"
+
+# based downstream investigation of plate images, KMS21BM and Karpas417 were found to be excessively
+# sensitive to many drugs, and are flagged as outliers below to bring attention to them.
+#
+# together, KMS21BM & Karpas417 have the lowest median pairwise correlations with other
+# cell lines (0.331 and 0.440 for kms21bm and karpas417, respectively; compared with
+# 0.525 or higher for all other cell lines).
+#
+# plates from both cell lines were found to have significant edge effects.
+#
+# KMS21BM has also been flagged as a possibly misidentified cell line;
+# https://web.expasy.org/cellosaurus/CVCL_2991
+#
+plate_mdata$outlier_cell_line <- plate_mdata$cell_line %in% c("KMS21BM_JCRB", "Karpas417_ECACC")
 
 # next, "combined" plate measurement and concentration matrices are created where
 # each column corresponds to a 1d vector representation of well values or concentrations for
