@@ -16,6 +16,18 @@ dat = pd.read_csv("data/raw.tsv.gz", sep="\t")
 cell_lines = set(dat.cell_line)
 plate_ids = set(dat.plate)
 
+# drug response fields
+num_conc = 11
+response_fields = ["ac50", "lac50"] + [f"viability_{i}" for i in range(num_conc)]
+
+rule create_drug_response_matrices:
+    input:
+        out_dir.joinpath("drug_curves/drug_curves.tsv"),
+    output:
+        expand(os.path.join(out_dir, "drug_response_matrices/{response}.tsv"), response=response_fields)
+    script:
+        "scripts/create_dose_response_matrices.R"
+
 rule fit_dose_response_curves:
     input:
         out_dir.joinpath("drug_plates/background_adjusted.tsv"),
