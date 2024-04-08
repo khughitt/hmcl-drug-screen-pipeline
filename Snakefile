@@ -66,6 +66,7 @@ rule background_adjustment:
 rule normalize_plates:
     input:
         out_dir.joinpath("drug_plates/raw.tsv"),
+        out_dir.joinpath("metadata/plate-metadata.tsv"),
     output:
         out_dir.joinpath("drug_plates/normed.tsv"),
     script:
