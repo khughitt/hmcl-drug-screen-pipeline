@@ -13,12 +13,12 @@ out_dir.mkdir(mode=0o755, parents=True, exist_ok=True)
 # get lists of plate ids, cell lines, and drugs
 dat = pd.read_csv("data/raw.tsv.gz", sep="\t")
 
-cell_lines = set(dat.cell_line)
-plate_ids = set(dat.plate)
+cell_lines = sorted(list(set(dat.cell_line)))
+plate_ids = sorted(list(set(dat.plate)))
 
 # drug response fields
 num_conc = 11
-response_fields = ["ac50", "lac50"] + [f"viability_{i}" for i in range(num_conc)]
+response_fields = ["ac50", "lac50"] + [f"dose_{i}" for i in range(num_conc)]
 
 rule create_drug_response_matrices:
     input:

@@ -40,7 +40,7 @@ for (i in seq_len(ncol(plate_mat))) {
   # for the two cell lines with incomplete/unexpected control behavior, we will fall back on the
   # minimum and maximum fluorescence values across the entire plates as proxices for the positive
   # and negative controls, respectively
-  if (names(plate_mat)[i] %in% control_outliers) {
+  if (colnames(plate_mat)[i] %in% control_outliers) {
     median_pos <- min(plate_mat[, i])
     median_neg <- max(plate_mat[, i])
   }

@@ -13,7 +13,7 @@ library(tidyverse)
 drug_curves <- read_tsv(snakemake@input[[1]], show_col_types = FALSE)
 
 # fields to generate matrices for
-target_fields <- c("ac50", "lac50", paste0("viability_", 0:10))
+target_fields <- c("ac50", "lac50", paste0("dose_", 0:10))
 
 out_dir <- dirname(snakemake@output[[1]])
 

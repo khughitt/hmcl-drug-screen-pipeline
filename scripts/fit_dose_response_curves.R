@@ -81,7 +81,7 @@ for (i in seq_len(nrow(cell_drugs))) {
 # convert nested list to a tibble
 cnames <- c("cell_line", "drug_id", "plate_id",
             "slope", "lower_limit", "upper_limit", "ac50",
-            paste0("viability_", 0:10),
+            paste0("dose_", 0:10),
             paste0("conc_", 0:10))
 
 curve_df <- res_lst %>%
