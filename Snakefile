@@ -20,11 +20,20 @@ plate_ids = sorted(list(set(dat.plate)))
 num_conc = 11
 response_fields = ["ac50", "lac50"] + [f"dose_{i}" for i in range(num_conc)]
 
+rule create_combined_response_matrices:
+    input:
+        expand(os.path.join(out_dir, "drug_response_matrices/{response}.tsv"), response=response_fields)
+    output:
+        out_dir.joinpath("combined_viability_matrices/cells.tsv"),
+        out_dir.joinpath("combined_viability_matrices/drugs.tsv"),
+    script:
+        "scripts/create_combined_response_matrices.R"
+
 rule create_drug_response_matrices:
     input:
         out_dir.joinpath("drug_curves/drug_curves.tsv"),
     output:
-        expand(os.path.join(out_dir, "drug_response_matrices/{response}.tsv"), response=response_fields)
+        os.path.join(out_dir, "drug_response_matrices/{response}.tsv")
     script:
         "scripts/create_dose_response_matrices.R"
 
