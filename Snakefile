@@ -20,6 +20,11 @@ plate_ids = sorted(list(set(dat.plate)))
 num_conc = 11
 response_fields = ["ac50", "lac50"] + [f"dose_{i}" for i in range(num_conc)]
 
+rule all:
+    input:
+        out_dir.joinpath("similarity/cells.tsv"),
+        out_dir.joinpath("similarity/drugs.tsv"),
+
 rule visualize_average_cell_response:
     input:
         out_dir.joinpath("drug_curves/drug_curves.tsv"),
@@ -44,6 +49,22 @@ rule visualize_plates:
         plate_ids=plate_ids
     script:
         "scripts/visualize_plates.R"
+
+rule compute_drug_similarity:
+    input:
+        out_dir.joinpath("combined_viability_matrices/drugs.tsv"),
+    output:
+        out_dir.joinpath("similarity/drugs.tsv"),
+    script:
+        "scripts/compute_drug_similarity.R"
+
+rule compute_cell_similarity:
+    input:
+        out_dir.joinpath("combined_viability_matrices/cells.tsv"),
+    output:
+        out_dir.joinpath("similarity/cells.tsv"),
+    script:
+        "scripts/compute_cell_similarity.R"
 
 rule reduce_dimensions:
     input:
