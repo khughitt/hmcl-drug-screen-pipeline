@@ -24,6 +24,7 @@ rule all:
     input:
         out_dir.joinpath("similarity/cells.tsv"),
         out_dir.joinpath("similarity/drugs.tsv"),
+        out_dir.joinpath("clusters/drugs.tsv"),
 
 rule visualize_average_cell_response:
     input:
@@ -49,6 +50,14 @@ rule visualize_plates:
         plate_ids=plate_ids
     script:
         "scripts/visualize_plates.R"
+
+rule cluster_drugs:
+    input:
+        out_dir.joinpath("similarity/drugs.tsv"),
+    output:
+        out_dir.joinpath("clusters/drugs.tsv"),
+    script:
+        "scripts/cluster_drugs.R"
 
 rule compute_drug_similarity:
     input:
