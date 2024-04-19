@@ -20,6 +20,31 @@ plate_ids = sorted(list(set(dat.plate)))
 num_conc = 11
 response_fields = ["ac50", "lac50"] + [f"dose_{i}" for i in range(num_conc)]
 
+rule visualize_average_cell_response:
+    input:
+        out_dir.joinpath("drug_curves/drug_curves.tsv"),
+    output:
+        os.path.join(out_dir, "fig/cells/cell_average_viability.png")
+    script:
+        "scripts/visualize_average_cell_response.R"
+
+rule visualize_plates:
+    input:
+        out_dir.joinpath("drug_plates/raw.tsv"),
+        out_dir.joinpath("drug_plates/normed.tsv"),
+        out_dir.joinpath("drug_plates/background_adjusted.tsv"),
+        out_dir.joinpath("drug_plates/background.tsv"),
+        out_dir.joinpath("metadata/plate-metadata.tsv")
+    output:
+        indiv=expand(os.path.join(out_dir, "fig/plates/{plate_id}.png"), plate_id=plate_ids),
+        mean=out_dir.joinpath("fig/mean_plate.png"),
+        median=out_dir.joinpath("fig/median_plate.png"),
+        background=out_dir.joinpath("fig/background_plate.png")
+    params:
+        plate_ids=plate_ids
+    script:
+        "scripts/visualize_plates.R"
+
 rule reduce_dimensions:
     input:
         out_dir.joinpath("combined_viability_matrices/cells.tsv"),
@@ -59,23 +84,6 @@ rule fit_dose_response_curves:
         out_dir.joinpath("drug_curves/drug_curves.tsv"),
     script:
         "scripts/fit_dose_response_curves.R"
-
-rule visualize_plates:
-    input:
-        out_dir.joinpath("drug_plates/raw.tsv"),
-        out_dir.joinpath("drug_plates/normed.tsv"),
-        out_dir.joinpath("drug_plates/background_adjusted.tsv"),
-        out_dir.joinpath("drug_plates/background.tsv"),
-        out_dir.joinpath("metadata/plate-metadata.tsv")
-    output:
-        indiv=expand(os.path.join(out_dir, "fig/plates/{plate_id}.png"), plate_id=plate_ids),
-        mean=out_dir.joinpath("fig/mean_plate.png"),
-        median=out_dir.joinpath("fig/median_plate.png"),
-        background=out_dir.joinpath("fig/background_plate.png")
-    params:
-        plate_ids=plate_ids
-    script:
-        "scripts/visualize_plates.R"
 
 rule background_adjustment:
     input:
