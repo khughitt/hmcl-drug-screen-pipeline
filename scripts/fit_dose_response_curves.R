@@ -9,23 +9,14 @@ set.seed(1)
 # constants
 PLATE_NUM_ROWS <- 32
 
-# use a four parameter log logistic model to fit curves;
+# use a four-parameter log-logistic model to fit curves;
 curve_params <- c("curve_slope", "curve_lower_lim", "curve_upper_lim", "ac50")
 fit_fxn <- LL.4(names=curve_params)
 
-# For some dose-response data, drc generates unexpectedly large ac-50 values. For now, we will
-# filter out any values outside the range of the original curve data (~117 max ac-50).
-# This results in an additional ~3450 / 89,000 values being set to NA.
-# https://github.com/DoseResponse/drc/issues/4
-# ac50_upper_cutoff <- max(orig_curves$ac50, na.rm=TRUE)
-
 # load data
-# all_plates_resp <- read_tsv("/data/proj/hmcl/drug-screen-manuscript/drug_plates/background_adjusted.tsv",
-#                             show_col_types=FALSE) %>%
 all_plates_resp <- read_tsv(snakemake@input[[1]], show_col_types=FALSE) %>%
   as.matrix()
 
-# drug_inds <- read_tsv("/data/proj/hmcl/drug-screen-manuscript/metadata/drug-indices.tsv",
 drug_inds <- read_tsv(snakemake@input[[2]], show_col_types=FALSE)
 
 # create a list of plate matrices

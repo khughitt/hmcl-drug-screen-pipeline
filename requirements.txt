@@ -1,10 +1,11 @@
-python>=3.10
+python>=3.9
 r-base>=4.3
 pandas
 snakemake-minimal
 r-tidyverse
 r-drc
 r-lattice
+r-nmf
 r-uwot
 r-rspectra
 r-viridis

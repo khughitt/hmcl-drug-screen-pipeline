@@ -7,7 +7,6 @@
 #
 library(tidyverse)
 library(uwot)
-library(RSpectra) # needed for umap initialization
 
 set.seed(1)
 
@@ -32,7 +31,7 @@ writeLines(as.character(var_explained), fp)
 close(fp)
 
 # UMAP (cells)
-umap_cells <- umap(cells, n_neighbors=5, n_components=2, scale=FALSE, min_dist=0.01)
+umap_cells <- umap(cells, n_neighbors=5, n_components=2)
 colnames(umap_cells) <- c("UMAP1", "UMAP2")
 
 umap_cells %>%
@@ -57,7 +56,7 @@ writeLines(as.character(var_explained), fp)
 close(fp)
 
 # UMAP (drugs)
-umap_drugs <- umap(drugs, n_neighbors=15, n_components=2, scale=FALSE, min_dist=0.01)
+umap_drugs <- umap(drugs, n_neighbors=15, n_components=2)
 colnames(umap_drugs) <- c("UMAP1", "UMAP2")
 
 umap_drugs %>%

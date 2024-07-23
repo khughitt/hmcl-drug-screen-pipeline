@@ -174,8 +174,8 @@ plate_mdata$num_control_outliers <- num_outliers[match(plate_mdata$plate,
                                                        names(num_outliers))]
 
 # based on the above, plates from one experimental date and two cell lines were found to
-# have unexpected control behavior, possibly due to DMSO resistance or a problem distributing the
-# drug (cell lines: MM1S_ATCC, U266_ATCC)
+# have unexpected control behavior, possibly due to a problem distributing the drug (cell lines:
+# MM1S_ATCC, U266_ATCC)
 plate_mdata$incomplete_controls <- plate_mdata$date == "2013-09-18"
 
 # based downstream investigation of plate images, KMS21BM and Karpas417 were found to be excessively

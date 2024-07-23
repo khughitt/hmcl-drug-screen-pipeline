@@ -16,6 +16,9 @@ dat = pd.read_csv("data/raw.tsv.gz", sep="\t")
 cell_lines = sorted(list(set(dat.cell_line)))
 plate_ids = sorted(list(set(dat.plate)))
 
+# filepaths for cell line-specific drug cluster plots
+cell_filepaths = [os.path.join(out_dir, "fig", "drugs", f"drug_curves_by_cluster_{cell}.png") for cell in cell_lines]
+
 # drug response fields
 num_conc = 11
 response_fields = ["ac50", "lac50"] + [f"dose_{i}" for i in range(num_conc)]
@@ -25,6 +28,22 @@ rule all:
         out_dir.joinpath("similarity/cells.tsv"),
         out_dir.joinpath("similarity/drugs.tsv"),
         out_dir.joinpath("clusters/drugs.tsv"),
+        out_dir.joinpath("fig/drugs/drug_umap_clusters.png")
+
+rule visualize_drug_clusters:
+    input:
+        out_dir.joinpath("drug_curves/drug_curves.tsv"),
+        out_dir.joinpath("projections/similarity/drugs_umap.tsv"),
+        out_dir.joinpath("clusters/drugs.tsv"),
+        "data/drug_metadata.tsv"
+    output:
+        os.path.join(out_dir, "fig/drugs/drug_umap_clusters.png"),
+        os.path.join(out_dir, "fig/drugs/drug_umap_super_clusters.png"),
+        os.path.join(out_dir, "fig/drugs/drug_cluster_median_ac50.png"),
+        os.path.join(out_dir, "fig/drugs/drug_curves_by_cluster_all_cells.png"),
+        cell_filepaths
+    script:
+        "scripts/visualize_drug_clusters.R"
 
 rule visualize_average_cell_response:
     input:
@@ -59,6 +78,20 @@ rule cluster_drugs:
     script:
         "scripts/cluster_drugs.R"
 
+rule reduce_similarity_matrix_dimensions:
+    input:
+        out_dir.joinpath("similarity/cells.tsv"),
+        out_dir.joinpath("similarity/drugs.tsv"),
+    output:
+        out_dir.joinpath("projections/similarity/cells_pca.tsv"),
+        out_dir.joinpath("projections/similarity/cells_pca_var.txt"),
+        out_dir.joinpath("projections/similarity/cells_umap.tsv"),
+        out_dir.joinpath("projections/similarity/drugs_pca.tsv"),
+        out_dir.joinpath("projections/similarity/drugs_pca_var.txt"),
+        out_dir.joinpath("projections/similarity/drugs_umap.tsv"),
+    script:
+        "scripts/reduce_dimensions.R"
+
 rule compute_drug_similarity:
     input:
         out_dir.joinpath("combined_viability_matrices/drugs.tsv"),
@@ -75,17 +108,17 @@ rule compute_cell_similarity:
     script:
         "scripts/compute_cell_similarity.R"
 
-rule reduce_dimensions:
+rule reduce_processed_data_dimensions:
     input:
         out_dir.joinpath("combined_viability_matrices/cells.tsv"),
         out_dir.joinpath("combined_viability_matrices/drugs.tsv"),
     output:
-        out_dir.joinpath("projections/cells_pca.tsv"),
-        out_dir.joinpath("projections/cells_pca_var.txt"),
-        out_dir.joinpath("projections/cells_umap.tsv"),
-        out_dir.joinpath("projections/drugs_pca.tsv"),
-        out_dir.joinpath("projections/drugs_pca_var.txt"),
-        out_dir.joinpath("projections/drugs_umap.tsv"),
+        out_dir.joinpath("projections/data/cells_pca.tsv"),
+        out_dir.joinpath("projections/data/cells_pca_var.txt"),
+        out_dir.joinpath("projections/data/cells_umap.tsv"),
+        out_dir.joinpath("projections/data/drugs_pca.tsv"),
+        out_dir.joinpath("projections/data/drugs_pca_var.txt"),
+        out_dir.joinpath("projections/data/drugs_umap.tsv"),
     script:
         "scripts/reduce_dimensions.R"
 

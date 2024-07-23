@@ -25,7 +25,7 @@ Download and install [conda](https://docs.conda.io/en/latest/) if it is not alre
 TODO: add option specifying how one can use exported environment file / specific versions..
 
 ```
-conda create --file requirements.txt -n "hmcl"
+conda create -c conda-forge --file requirements.txt -n "hmcl"
 ```
 
 ## Related data

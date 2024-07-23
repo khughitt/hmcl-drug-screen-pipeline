@@ -3,8 +3,10 @@
 #
 library(tidyverse)
 
+set.seed(1)
+
 # number of clusters to detect?
-k <- 10
+k <- 9
 
 infile <- snakemake@input[[1]]
 
