@@ -15,11 +15,20 @@ cell_factors <- drug_curves %>%
 
 cell_factors$Dose <- factor(cell_factors$Dose, levels=paste0("dose_", 0:10), labels=1:11)
 
+# assign colors based on average viability
+cell_order <- cell_factors %>%
+  group_by(`Cell Line`) %>%
+  summarize(mean_viability=mean(Viability)) %>%
+  arrange(-mean_viability) %>%
+  pull(`Cell Line`)
+
+cell_factors$`Cell Line` <- factor(cell_factors$`Cell Line`, levels = cell_order)
+
 ggplot(cell_factors, aes(x=Dose, y=Viability, group=`Cell Line`, color=`Cell Line`)) +
   geom_line() +
   theme_bw() +
-  theme(axis.text.x=element_text(hjust=0.5),
-        legend.text=element_text(size=8)) +
+  theme(axis.text.x=element_text(hjust=0.5)) +
+  theme(legend.text=element_text(size=8)) +
   xlab("Dose number") +
   ylab("Median cell viability")
 
