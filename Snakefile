@@ -32,7 +32,7 @@ rule all:
 
 rule visualize_drug_clusters:
     input:
-        out_dir.joinpath("drug_curves/drug_curves.tsv"),
+        out_dir.joinpath("drug_curves/drug_curves_filtered.tsv"),
         out_dir.joinpath("projections/similarity/drugs_umap.tsv"),
         out_dir.joinpath("clusters/drugs.tsv"),
         "data/drug_metadata.tsv"
@@ -133,11 +133,19 @@ rule create_combined_response_matrices:
 
 rule create_drug_response_matrices:
     input:
-        out_dir.joinpath("drug_curves/drug_curves.tsv"),
+        out_dir.joinpath("drug_curves/drug_curves_filtered.tsv"),
     output:
         os.path.join(out_dir, "drug_response_matrices/{response}.tsv")
     script:
         "scripts/create_dose_response_matrices.R"
+
+rule filter_outlier_cells:
+    input:
+        out_dir.joinpath("drug_curves/drug_curves.tsv"),
+    output:
+        out_dir.joinpath("drug_curves/drug_curves_filtered.tsv"),
+    script:
+        "scripts/filter_outlier_cells.R"
 
 rule fit_dose_response_curves:
     input:
