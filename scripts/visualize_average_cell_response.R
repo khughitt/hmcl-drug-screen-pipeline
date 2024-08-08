@@ -32,4 +32,4 @@ ggplot(cell_factors, aes(x=Dose, y=Viability, group=`Cell Line`, color=`Cell Lin
   xlab("Dose number") +
   ylab("Median cell viability")
 
-ggsave(snakemake@output[[1]], width=1920, height=1080, units="px", dpi=300)
+ggsave(snakemake@output[[1]], width=1920, height=1080, units="px", dpi=192)

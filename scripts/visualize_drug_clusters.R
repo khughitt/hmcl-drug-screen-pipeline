@@ -12,13 +12,16 @@ library(uwot)
 
 set.seed(1)
 
-save.image()
-
 # load drug curves
 drug_curves <- read_tsv(snakemake@input[[1]])
 
 # load drug similarity matrix UMAP projection
 drug_umap <- read_tsv(snakemake@input[[2]], show_col_types=FALSE)
+
+# load cell cluster assignments
+cell_clusters <- read_tsv(snakemake@input[[4]], show_col_types=FALSE) %>%
+  rename(cell_line = cell, cell_cluster = cluster) %>%
+  mutate(cell_cluster = factor(cell_cluster))
 
 # load drug cluster assignments
 drug_clusters <- read_tsv(snakemake@input[[3]], show_col_types=FALSE)
@@ -26,10 +29,10 @@ drug_clusters$cluster <- factor(drug_clusters$cluster)
 
 # add column corresponding to membership in the "left" or "right" lobe of the UMAP plot
 drug_clusters <- drug_clusters %>%
-  mutate(super_cluster=factor(ifelse(cluster %in% c(1, 4, 5, 6, 8), "I", "II")))
+  mutate(super_cluster=factor(ifelse(cluster %in% c(1, 4, 5, 6), "I", "II")))
 
 # load drug metadata
-mdat <- read_tsv(snakemake@input[[4]], col_types=cols(.default="c")) %>%
+mdat <- read_tsv(snakemake@input[[5]], col_types=cols(.default="c")) %>%
   select(drug_id=sample_id,
          binary_pharmacology,
          mechanistic_class,
@@ -91,11 +94,24 @@ average_ac50 <- ac50_mat %>%
   summarize(ac50 = mean(ac50, na.rm=TRUE)) %>%
   select(cell_line, ac50, cluster)
 
-ggplot(average_ac50, aes(x=cell_line, y=ac50)) +
+# add cell line clusters and group cells by cluster
+average_ac50 <- average_ac50 %>%
+  inner_join(cell_clusters, by="cell_line")
+
+ordered_cells <- cell_clusters %>%
+  arrange(cell_cluster, cell_line) %>%
+  pull(cell_line)
+
+average_ac50$cell_line <- factor(average_ac50$cell_line, levels=ordered_cells)
+
+ggplot(average_ac50, aes(x=cell_line, y=ac50, fill=cell_cluster)) +
   geom_bar(stat="identity") +
   theme_bw() +
   theme(axis.text.x=element_text(angle=90, hjust=1, vjust=0.5)) +
-  ggtitle("Mean AC-50 by cluster") +
+  guides(fill=guide_legend(title="Cell Line Cluster")) +
+  ggtitle("Mean AC-50 by Drug Cluster") +
+  xlab("Cell Line") +
+  ylab("AC-50") +
   facet_wrap(~cluster, ncol=3)
 
 ggsave(snakemake@output[[3]], width=1080, height=1080, units="px", dpi=92)

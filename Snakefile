@@ -16,6 +16,10 @@ dat = pd.read_csv("data/raw.tsv.gz", sep="\t")
 cell_lines = sorted(list(set(dat.cell_line)))
 plate_ids = sorted(list(set(dat.plate)))
 
+# exclude outlier cell lines downstream plots
+outliers = ["KMS21BM_JCRB", "Karpas417_ECACC"]
+cell_lines = [x for x in cell_lines if x not in outliers]
+
 # filepaths for cell line-specific drug cluster plots
 cell_filepaths = [os.path.join(out_dir, "fig", "drugs", f"drug_curves_by_cluster_{cell}.png") for cell in cell_lines]
 
@@ -27,19 +31,22 @@ rule all:
     input:
         out_dir.joinpath("similarity/cells.tsv"),
         out_dir.joinpath("similarity/drugs.tsv"),
+        out_dir.joinpath("clusters/cells.tsv"),
         out_dir.joinpath("clusters/drugs.tsv"),
-        out_dir.joinpath("fig/drugs/drug_umap_clusters.png")
+        out_dir.joinpath("fig/drugs/drug_umap_clusters.png"),
+        out_dir.joinpath("fig/cells/cell_average_viability.png")
 
 rule visualize_drug_clusters:
     input:
         out_dir.joinpath("drug_curves/drug_curves_filtered.tsv"),
         out_dir.joinpath("projections/similarity/drugs_umap.tsv"),
         out_dir.joinpath("clusters/drugs.tsv"),
+        out_dir.joinpath("clusters/cells.tsv"),
         "data/drug_metadata.tsv"
     output:
         os.path.join(out_dir, "fig/drugs/drug_umap_clusters.png"),
         os.path.join(out_dir, "fig/drugs/drug_umap_super_clusters.png"),
-        os.path.join(out_dir, "fig/drugs/drug_cluster_median_ac50.png"),
+        os.path.join(out_dir, "fig/drugs/drug_cluster_mean_ac50.png"),
         os.path.join(out_dir, "fig/drugs/drug_curves_by_cluster_all_cells.png"),
         cell_filepaths
     script:
@@ -69,6 +76,14 @@ rule visualize_plates:
         plate_ids=plate_ids
     script:
         "scripts/visualize_plates.R"
+
+rule cluster_cells:
+    input:
+        out_dir.joinpath("similarity/cells.tsv"),
+    output:
+        out_dir.joinpath("clusters/cells.tsv"),
+    script:
+        "scripts/cluster_cells.R"
 
 rule cluster_drugs:
     input:
