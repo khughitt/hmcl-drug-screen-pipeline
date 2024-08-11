@@ -9,3 +9,4 @@ r-nmf
 r-uwot
 r-rspectra
 r-viridis
+r-openxlsx

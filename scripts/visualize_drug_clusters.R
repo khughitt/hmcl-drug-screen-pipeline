@@ -138,6 +138,10 @@ cluster_means <- cbind(drug_id="average", cluster_means)
 
 drug_mat_all <- rbind(drug_mat_all, cluster_means)
 
+# color by drug cluster?
+# ggplot(drug_mat_all, aes(x=dose, y=viability, group=drug_id, color=cluster)) +
+#   geom_line() +
+
 ggplot(drug_mat_all, aes(x=dose, y=viability, group=drug_id)) +
   geom_line(color="#aaa") +
   geom_line(data=filter(drug_mat_all, drug_id == "average"), aes(x=dose, y=viability), colour="red", linewidth=1) +

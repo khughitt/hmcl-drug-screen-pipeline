@@ -34,7 +34,10 @@ rule all:
         out_dir.joinpath("clusters/cells.tsv"),
         out_dir.joinpath("clusters/drugs.tsv"),
         out_dir.joinpath("fig/drugs/drug_umap_clusters.png"),
-        out_dir.joinpath("fig/cells/cell_average_viability.png")
+        out_dir.joinpath("fig/cells/cell_average_viability.png"),
+        out_dir.joinpath("xlsx/drug_ac50.xslx"),
+        out_dir.joinpath("xlsx/drug_clusters.xslx"),
+        out_dir.joinpath("xlsx/cell_clusters.xslx")
 
 rule visualize_drug_clusters:
     input:
@@ -76,6 +79,19 @@ rule visualize_plates:
         plate_ids=plate_ids
     script:
         "scripts/visualize_plates.R"
+
+rule create_result_tables:
+    input:
+        out_dir.joinpath("drug_curves/drug_curves.tsv"),
+        out_dir.joinpath("clusters/cells.tsv"),
+        out_dir.joinpath("clusters/drugs.tsv"),
+        "data/drug_metadata.tsv"
+    output:
+        out_dir.joinpath("xlsx/drug_ac50.xslx"),
+        out_dir.joinpath("xlsx/cell_clusters.xslx"),
+        out_dir.joinpath("xlsx/drug_clusters.xslx")
+    script:
+        "scripts/create_result_tables.R"
 
 rule cluster_cells:
     input:
