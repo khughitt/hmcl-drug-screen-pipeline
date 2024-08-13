@@ -1,5 +1,6 @@
 python>=3.9
 r-base>=4.3
+frictionless
 pandas
 snakemake-minimal
 r-tidyverse

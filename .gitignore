@@ -2,3 +2,4 @@ archive
 output
 extra
 .snakemake
+.RData

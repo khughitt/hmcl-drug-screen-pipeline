@@ -33,6 +33,7 @@ rule all:
         out_dir.joinpath("similarity/drugs.tsv"),
         out_dir.joinpath("clusters/cells.tsv"),
         out_dir.joinpath("clusters/drugs.tsv"),
+        out_dir.joinpath("enrichment/drug_cluster_annotation_enrichment.tsv"),
         out_dir.joinpath("fig/drugs/drug_umap_clusters.png"),
         out_dir.joinpath("fig/cells/cell_average_viability.png"),
         out_dir.joinpath("xlsx/drug_ac50.xslx"),
@@ -92,6 +93,16 @@ rule create_result_tables:
         out_dir.joinpath("xlsx/drug_clusters.xslx")
     script:
         "scripts/create_result_tables.R"
+
+rule quantify_drug_cluster_annotation_enrichment:
+    input:
+        out_dir.joinpath("similarity/drugs.tsv"),
+        out_dir.joinpath("clusters/drugs.tsv"),
+        "data/drug_metadata.tsv"
+    output:
+        out_dir.joinpath("enrichment/drug_cluster_annotation_enrichment.tsv")
+    script:
+        "scripts/quantify_drug_cluster_annotation_enrichment.R"
 
 rule cluster_cells:
     input:
