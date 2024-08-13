@@ -58,7 +58,7 @@ rule visualize_drug_clusters:
 
 rule visualize_average_cell_response:
     input:
-        out_dir.joinpath("drug_curves/drug_curves.tsv"),
+        out_dir.joinpath("cell_viability/average_cell_viability.tsv"),
     output:
         os.path.join(out_dir, "fig/cells/cell_average_viability.png")
     script:
@@ -103,6 +103,14 @@ rule quantify_drug_cluster_annotation_enrichment:
         out_dir.joinpath("enrichment/drug_cluster_annotation_enrichment.tsv")
     script:
         "scripts/quantify_drug_cluster_annotation_enrichment.R"
+
+rule compute_average_cell_viability_curves:
+    input:
+        out_dir.joinpath("drug_curves/drug_curves.tsv"),
+    output:
+        out_dir.joinpath("cell_viability/average_cell_viability.tsv"),
+    script:
+        "scripts/compute_average_cell_response.R"
 
 rule cluster_cells:
     input:
