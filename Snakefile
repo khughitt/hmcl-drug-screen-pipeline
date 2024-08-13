@@ -38,7 +38,20 @@ rule all:
         out_dir.joinpath("fig/cells/cell_average_viability.png"),
         out_dir.joinpath("xlsx/drug_ac50.xslx"),
         out_dir.joinpath("xlsx/drug_clusters.xslx"),
-        out_dir.joinpath("xlsx/cell_clusters.xslx")
+        out_dir.joinpath("xlsx/cell_clusters.xslx"),
+        out_dir.joinpath("datapackage.yml")
+
+rule package_results:
+    input:
+        out_dir.joinpath("drug_plates/raw.tsv"),
+        out_dir.joinpath("drug_plates/normed.tsv"),
+        out_dir.joinpath("drug_plates/background_adjusted.tsv"),
+        out_dir.joinpath("drug_plates/background.tsv"),
+        out_dir.joinpath("drug_plates/concentrations.tsv"),
+    output:
+        out_dir.joinpath("datapackage.yml")
+    script:
+        "scripts/package_results.py"
 
 rule visualize_drug_clusters:
     input:
