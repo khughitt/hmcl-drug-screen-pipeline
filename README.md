@@ -20,12 +20,14 @@ and initialize a conda environment with the required dependencies:
 git clone xx
 ```
 
-Download and install [conda](https://docs.conda.io/en/latest/) if it is not already present on your system.
+Download and install [conda](https://docs.conda.io/en/latest/) (or a variant such as
+[mamba](https://mamba.readthedocs.io), which is used below) if it is not already present on your
+system.
 
 TODO: add option specifying how one can use exported environment file / specific versions..
 
 ```
-conda create -c conda-forge --file requirements.txt -n "hmcl"
+mamba create -c conda-forge --file requirements.txt -n "hmcl"
 ```
 
 ## Related data

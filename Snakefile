@@ -29,11 +29,6 @@ response_fields = ["ac50", "lac50"] + [f"dose_{i}" for i in range(num_conc)]
 
 rule all:
     input:
-        out_dir.joinpath("similarity/cells.tsv"),
-        out_dir.joinpath("similarity/drugs.tsv"),
-        out_dir.joinpath("clusters/cells.tsv"),
-        out_dir.joinpath("clusters/drugs.tsv"),
-        out_dir.joinpath("enrichment/drug_cluster_annotation_enrichment.tsv"),
         out_dir.joinpath("fig/drugs/drug_umap_clusters.png"),
         out_dir.joinpath("fig/cells/cell_average_viability.png"),
         out_dir.joinpath("xlsx/drug_ac50.xslx"),
@@ -43,11 +38,40 @@ rule all:
 
 rule package_results:
     input:
+        # 1-3. drug plates
         out_dir.joinpath("drug_plates/raw.tsv"),
         out_dir.joinpath("drug_plates/normed.tsv"),
         out_dir.joinpath("drug_plates/background_adjusted.tsv"),
+        # 4. plate background
         out_dir.joinpath("drug_plates/background.tsv"),
+        # 5. drug concentrations
         out_dir.joinpath("drug_plates/concentrations.tsv"),
+        # 6. drug curves
+        out_dir.joinpath("drug_curves/drug_curves.tsv"),
+        # 7. drug response matrix (AC-50)
+        out_dir.joinpath("drug_response_matrices/ac50.tsv"),
+        # 8. drug pca
+        out_dir.joinpath("projections/data/drugs_pca.tsv"),
+        # 9. drug similarity matrix
+        out_dir.joinpath("similarity/drugs.tsv"),
+        # 10. drug similarity matrix (umap projection)
+        out_dir.joinpath("projections/similarity/drugs_umap.tsv"),
+        # 11. drug clusters
+        out_dir.joinpath("clusters/drugs.tsv"),
+        # 12. drug enrichment results
+        out_dir.joinpath("enrichment/drug_cluster_annotation_enrichment.tsv"),
+        # 13. cell pca
+        out_dir.joinpath("projections/similarity/cells_pca.tsv"),
+        # 14. cell similarity matrix
+        out_dir.joinpath("similarity/cells.tsv"),
+        # 15. cell similarity matrix (umap projection)
+        out_dir.joinpath("projections/similarity/cells_umap.tsv"),
+        # 16. cell clusters
+        out_dir.joinpath("clusters/cells.tsv"),
+        # 17. cell average dose response curves
+        out_dir.joinpath("cell_viability/average_cell_viability.tsv"),
+        # 18. metadata
+        out_dir.joinpath("metadata/drug-metadata.tsv")
     output:
         out_dir.joinpath("datapackage.yml")
     script:
@@ -59,7 +83,7 @@ rule visualize_drug_clusters:
         out_dir.joinpath("projections/similarity/drugs_umap.tsv"),
         out_dir.joinpath("clusters/drugs.tsv"),
         out_dir.joinpath("clusters/cells.tsv"),
-        "data/drug_metadata.tsv"
+        out_dir.joinpath("metadata/drug-metadata.tsv")
     output:
         os.path.join(out_dir, "fig/drugs/drug_umap_clusters.png"),
         os.path.join(out_dir, "fig/drugs/drug_umap_super_clusters.png"),
@@ -99,7 +123,7 @@ rule create_result_tables:
         out_dir.joinpath("drug_curves/drug_curves.tsv"),
         out_dir.joinpath("clusters/cells.tsv"),
         out_dir.joinpath("clusters/drugs.tsv"),
-        "data/drug_metadata.tsv"
+        out_dir.joinpath("metadata/drug-metadata.tsv")
     output:
         out_dir.joinpath("xlsx/drug_ac50.xslx"),
         out_dir.joinpath("xlsx/cell_clusters.xslx"),
@@ -111,7 +135,7 @@ rule quantify_drug_cluster_annotation_enrichment:
     input:
         out_dir.joinpath("similarity/drugs.tsv"),
         out_dir.joinpath("clusters/drugs.tsv"),
-        "data/drug_metadata.tsv"
+        out_dir.joinpath("metadata/drug-metadata.tsv")
     output:
         out_dir.joinpath("enrichment/drug_cluster_annotation_enrichment.tsv")
     script:
@@ -137,7 +161,7 @@ rule cluster_drugs:
     input:
         out_dir.joinpath("similarity/drugs.tsv"),
     output:
-        out_dir.joinpath("clusters/drugs.tsv"),
+        out_dir.joinpath("clusters/drugs.tsv")
     script:
         "scripts/cluster_drugs.R"
 
@@ -250,3 +274,13 @@ rule create_plate_matrices:
         plate_ids=plate_ids
     script:
         "scripts/create_plate_matrices.R"
+
+rule copy_drug_metadata:
+    input:
+        "data/drug-metadata.tsv"
+    output:
+        out_dir.joinpath("metadata/drug-metadata.tsv")
+    shell:
+        "cp {input} {output}"
+
+# vi:ft=snakemake
