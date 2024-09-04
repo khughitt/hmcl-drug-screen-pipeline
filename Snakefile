@@ -31,6 +31,7 @@ rule all:
     input:
         out_dir.joinpath("fig/drugs/drug_umap_clusters.png"),
         out_dir.joinpath("fig/cells/cell_average_viability.png"),
+        out_dir.joinpath("fig/mean_plate.png"),
         out_dir.joinpath("xlsx/drug_ac50.xslx"),
         out_dir.joinpath("xlsx/drug_clusters.xslx"),
         out_dir.joinpath("xlsx/cell_clusters.xslx"),
@@ -109,10 +110,10 @@ rule visualize_plates:
         out_dir.joinpath("drug_plates/background.tsv"),
         out_dir.joinpath("metadata/plate-metadata.tsv")
     output:
-        indiv=expand(os.path.join(out_dir, "fig/plates/{plate_id}.png"), plate_id=plate_ids),
-        mean=out_dir.joinpath("fig/mean_plate.png"),
-        median=out_dir.joinpath("fig/median_plate.png"),
-        background=out_dir.joinpath("fig/background_plate.png")
+        indiv=expand(os.path.join(out_dir, "fig/plates/indiv/{plate_id}.png"), plate_id=plate_ids),
+        mean=out_dir.joinpath("fig/plates/mean_plate.png"),
+        median=out_dir.joinpath("fig/plates/median_plate.png"),
+        background=out_dir.joinpath("fig/plates/background_plate.png")
     params:
         plate_ids=plate_ids
     script:
