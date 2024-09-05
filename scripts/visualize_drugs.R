@@ -9,8 +9,13 @@
 #
 library(tidyverse)
 library(uwot)
+library(ggrepel)
 
 set.seed(1)
+
+# mm drugs
+mm_drugs <- c("NCGC00091019-08", "NCGC00167491-02", "NCGC00346551-01", "NCGC00242506-02")
+mm_drugs <- setNames(mm_drugs, c("Dexamethasone", "Lenalidomide", "Pomalidomide", "Bortezomib"))
 
 # load drug curves
 drug_curves <- read_tsv(snakemake@input[[1]])
@@ -138,13 +143,21 @@ cluster_means <- cbind(drug_id="average", cluster_means)
 
 drug_mat_all <- rbind(drug_mat_all, cluster_means)
 
-# color by drug cluster?
-# ggplot(drug_mat_all, aes(x=dose, y=viability, group=drug_id, color=cluster)) +
-#   geom_line() +
+drug_mat_all$label <- ""
+drug_mat_all$label[match(mm_drugs, drug_mat_all$drug_id)] <- names(mm_drugs)
 
+# visualize drug curves by cluster
 ggplot(drug_mat_all, aes(x=dose, y=viability, group=drug_id)) +
   geom_line(color="#aaa") +
   geom_line(data=filter(drug_mat_all, drug_id == "average"), aes(x=dose, y=viability), colour="red", linewidth=1) +
+  geom_line(data=filter(drug_mat_all, drug_id %in% mm_drugs[1:2]), aes(x=dose, y=viability), 
+            colour="darkgreen", linewidth=0.9, linetype="dashed") +
+  geom_line(data=filter(drug_mat_all, drug_id %in% mm_drugs[3:4]), aes(x=dose, y=viability), 
+            colour="dodgerblue3", linewidth=0.9, linetype="dashed") +
+  geom_label_repel(data=filter(drug_mat_all, drug_id %in% mm_drugs[1:2]), color="darkgreen",
+                   aes(label = label), hjust="right", nudge_x = 1, na.rm = TRUE) +
+  geom_label_repel(data=filter(drug_mat_all, drug_id %in% mm_drugs[3:4]), color="dodgerblue3",
+                   aes(label = label), hjust="right", nudge_x = 1, na.rm = TRUE) +
   theme_bw() +
   ggtitle("Average dose response curves by cluster (all cells)") +
   facet_wrap(~cluster, ncol=3)

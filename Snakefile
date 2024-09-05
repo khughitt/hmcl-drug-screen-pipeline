@@ -30,8 +30,11 @@ response_fields = ["ac50", "lac50"] + [f"dose_{i}" for i in range(num_conc)]
 rule all:
     input:
         out_dir.joinpath("fig/drugs/drug_umap_clusters.png"),
+        out_dir.joinpath("fig/drugs/drug_umap_super_clusters.png"),
+        out_dir.joinpath("fig/drugs/drug_cluster_mean_ac50.png"),
+        out_dir.joinpath("fig/drugs/drug_curves_by_cluster_all_cells.png"),
         out_dir.joinpath("fig/cells/cell_average_viability.png"),
-        out_dir.joinpath("fig/mean_plate.png"),
+        out_dir.joinpath("fig/plates/mean_plate.png"),
         out_dir.joinpath("xlsx/drug_ac50.xslx"),
         out_dir.joinpath("xlsx/drug_clusters.xslx"),
         out_dir.joinpath("xlsx/cell_clusters.xslx"),
@@ -78,7 +81,7 @@ rule package_results:
     script:
         "scripts/package_results.py"
 
-rule visualize_drug_clusters:
+rule visualize_drugs:
     input:
         out_dir.joinpath("drug_curves/drug_curves_filtered.tsv"),
         out_dir.joinpath("projections/similarity/drugs_umap.tsv"),
@@ -92,7 +95,7 @@ rule visualize_drug_clusters:
         os.path.join(out_dir, "fig/drugs/drug_curves_by_cluster_all_cells.png"),
         cell_filepaths
     script:
-        "scripts/visualize_drug_clusters.R"
+        "scripts/visualize_drugs.R"
 
 rule visualize_average_cell_response:
     input:

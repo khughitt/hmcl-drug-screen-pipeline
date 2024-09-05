@@ -5,7 +5,7 @@ library(tidyverse)
 
 cell_factors <- read_tsv(snakemake@input[[1]], show_col_types=FALSE)
 
-cell_factors$Dose <- factor(cell_factors$Dose, levels=paste0("dose_", 0:10), labels=1:11)
+cell_factors$Dose <- factor(cell_factors$Dose, levels=1:11, labels=paste0("dose_", 0:10))
 
 # assign colors based on average viability
 cell_order <- cell_factors %>%
