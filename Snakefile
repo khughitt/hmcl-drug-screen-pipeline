@@ -5,8 +5,10 @@ import os
 import pathlib
 import pandas as pd
 
+configfile: "config/config.yml"
+
 # output directory
-out_dir = pathlib.Path("/data/proj/hmcl/drug-screen-manuscript")
+out_dir = pathlib.Path(config["output_dir"])
 
 out_dir.mkdir(mode=0o755, parents=True, exist_ok=True)
 
@@ -17,8 +19,7 @@ cell_lines = sorted(list(set(dat.cell_line)))
 plate_ids = sorted(list(set(dat.plate)))
 
 # exclude outlier cell lines downstream plots
-outliers = ["KMS21BM_JCRB", "Karpas417_ECACC"]
-cell_lines = [x for x in cell_lines if x not in outliers]
+cell_lines = [x for x in cell_lines if x not in config["outlier_cells"]]
 
 # filepaths for cell line-specific drug cluster plots
 cell_filepaths = [os.path.join(out_dir, "fig", "drugs", f"drug_curves_by_cluster_{cell}.png") for cell in cell_lines]
@@ -30,7 +31,6 @@ response_fields = ["ac50", "lac50"] + [f"dose_{i}" for i in range(num_conc)]
 rule all:
     input:
         out_dir.joinpath("fig/drugs/drug_umap_clusters.png"),
-        out_dir.joinpath("fig/drugs/drug_umap_super_clusters.png"),
         out_dir.joinpath("fig/drugs/drug_cluster_mean_ac50.png"),
         out_dir.joinpath("fig/drugs/drug_curves_by_cluster_all_cells.png"),
         out_dir.joinpath("fig/cells/cell_average_viability.png"),
@@ -84,26 +84,32 @@ rule package_results:
 rule visualize_drugs:
     input:
         out_dir.joinpath("drug_curves/drug_curves_filtered.tsv"),
+        out_dir.joinpath("projections/similarity/drugs_pca.tsv"),
         out_dir.joinpath("projections/similarity/drugs_umap.tsv"),
         out_dir.joinpath("clusters/drugs.tsv"),
         out_dir.joinpath("clusters/cells.tsv"),
         out_dir.joinpath("metadata/drug-metadata.tsv")
     output:
+        os.path.join(out_dir, "fig/drugs/drug_pca_clusters.png"),
         os.path.join(out_dir, "fig/drugs/drug_umap_clusters.png"),
-        os.path.join(out_dir, "fig/drugs/drug_umap_super_clusters.png"),
         os.path.join(out_dir, "fig/drugs/drug_cluster_mean_ac50.png"),
         os.path.join(out_dir, "fig/drugs/drug_curves_by_cluster_all_cells.png"),
         cell_filepaths
     script:
         "scripts/visualize_drugs.R"
 
-rule visualize_average_cell_response:
+rule visualize_cells:
     input:
-        out_dir.joinpath("cell_viability/average_cell_viability.tsv"),
+        out_dir.joinpath("projections/similarity/cells_pca.tsv"),
+        out_dir.joinpath("projections/similarity/cells_umap.tsv"),
+        out_dir.joinpath("clusters/cells.tsv"),
+        out_dir.joinpath("cell_viability/average_cell_viability.tsv")
     output:
+        os.path.join(out_dir, "fig/cells/cell_pca_clusters.png"),
+        os.path.join(out_dir, "fig/cells/cell_umap_clusters.png"),
         os.path.join(out_dir, "fig/cells/cell_average_viability.png")
     script:
-        "scripts/visualize_average_cell_response.R"
+        "scripts/visualize_cells.R"
 
 rule visualize_plates:
     input:

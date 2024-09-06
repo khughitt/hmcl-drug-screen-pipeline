@@ -6,7 +6,7 @@ library(tidyverse)
 set.seed(1)
 
 # number of clusters to detect?
-k <- 9
+k <- snakemake@config[["num_drug_clusters"]]
 
 infile <- snakemake@input[[1]]
 

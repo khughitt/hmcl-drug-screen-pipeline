@@ -1,0 +1,16 @@
+# directory to save pipeline output to
+output_dir: "/data/proj/hmcl/drug-screen-manuscript"
+
+# "outlier" cell lines to be removed from downstream steps
+outlier_cells: ["KMS21BM_JCRB", "Karpas417_ECACC"]
+
+# number of drug clusters to detect?
+num_drug_clusters: 9
+
+# number of cell line clusters to detect?
+num_drug_clusters: 5
+
+# drugs currently used for myeloma treatment
+mm_drugs:
+  ids: ["NCGC00091019-08", "NCGC00167491-02", "NCGC00346551-01", "NCGC00242506-02"]
+  names: ["Dexamethasone", "Lenalidomide", "Pomalidomide", "Bortezomib"]
