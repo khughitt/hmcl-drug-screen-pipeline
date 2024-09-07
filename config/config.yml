@@ -12,5 +12,5 @@ num_drug_clusters: 5
 
 # drugs currently used for myeloma treatment
 mm_drugs:
-  ids: ["NCGC00091019-08", "NCGC00167491-02", "NCGC00346551-01", "NCGC00242506-02"]
-  names: ["Dexamethasone", "Lenalidomide", "Pomalidomide", "Bortezomib"]
+  ids: ["NCGC00249613-03", "NCGC00091019-08", "NCGC00250412-01", "NCGC00167491-02", "NCGC00346551-01", "NCGC00242506-02"]
+  names: ["Carfilzomib", "Dexamethasone", "JQ1", "Lenalidomide", "Pomalidomide", "Bortezomib"]
