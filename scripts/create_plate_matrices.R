@@ -27,7 +27,6 @@ max_num_drugs_tested <- NUM_PLATES_PER_CELL_LINE * PLATE_NUM_ROWS * PLATE_NUM_DR
 ctypes <- cols(
   cell_line = col_factor(),
   date = col_date(),
-  experiment = col_factor(),
   plate = col_factor(),
   layer_name = col_factor(),
   row = col_integer(),
