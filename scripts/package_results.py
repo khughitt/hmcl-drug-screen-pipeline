@@ -23,65 +23,68 @@ def create_resource(path:str, name:str, title:str, include_schema=True):
 # Create dataset Resource objects
 resources = []
 
-# 1-3. drug plates
+# 1-4. drug plates
 res = create_resource(snek.input[0], "plates_raw", "Drug plate matrix (raw)", include_schema=False)
 resources.append(res)
 
-res = create_resource(snek.input[1], "plates_normed", "Drug plate matrix (normed)", include_schema=False)
+res = create_resource(snek.input[1], "plates_raw_filtered", "Drug plate matrix (raw / filtered)", include_schema=False)
 resources.append(res)
 
-res = create_resource(snek.input[2], "plates_bgadj", "Drug plate matrix (background-adjusted)", include_schema=False)
+res = create_resource(snek.input[2], "plates_normed", "Drug plate matrix (normed)", include_schema=False)
 resources.append(res)
 
-# 4. plate background
-res = create_resource(snek.input[3], "plate_background", "Drug plate matrix (background)", include_schema=False)
+res = create_resource(snek.input[3], "plates_bgadj", "Drug plate matrix (background-adjusted)", include_schema=False)
 resources.append(res)
 
-# 5. drug concentrations
-res = create_resource(snek.input[4], "plate_concentrations", "Drug plate matrix (concentrations)", include_schema=False)
+# 5. plate background
+res = create_resource(snek.input[4], "plate_background", "Drug plate matrix (background)", include_schema=False)
 resources.append(res)
 
-# 6. drug curves
-res = create_resource(snek.input[5], "drug_curves", "Drug curves")
+# 6. drug concentrations
+res = create_resource(snek.input[5], "plate_concentrations", "Drug plate matrix (concentrations)", include_schema=False)
 resources.append(res)
 
-# 7. drug response matrix (AC-50)
-res = create_resource(snek.input[6], "ac50_matrix", "AC-50 Matrix", include_schema=False)
+# 7. drug curves
+res = create_resource(snek.input[6], "drug_curves", "Drug curves")
 resources.append(res)
 
-# 8. drug pca
-res = create_resource(snek.input[7], "drug_pca", "Drug PCA")
+# 8. drug response matrix (AC-50)
+res = create_resource(snek.input[7], "ac50_matrix", "AC-50 Matrix", include_schema=False)
 resources.append(res)
 
-# 9. drug similarity matrix
-res = create_resource(snek.input[8], "drug_similarity", "Drug Similarity Matrix", include_schema=False)
+# 9. drug pca
+res = create_resource(snek.input[8], "drug_pca", "Drug PCA")
 resources.append(res)
 
-# 10. drug similarity matrix (umap projection)
-res = create_resource(snek.input[9], "drug_umap", "Drug Similarity Matrix (UMAP)")
+# 10. drug similarity matrix
+res = create_resource(snek.input[9], "drug_similarity", "Drug Similarity Matrix", include_schema=False)
 resources.append(res)
 
-# 11. drug clusters
-res = create_resource(snek.input[10], "drug_clusters", "Drug Clusters")
+# 11. drug similarity matrix (umap projection)
+res = create_resource(snek.input[10], "drug_umap", "Drug Similarity Matrix (UMAP)")
 resources.append(res)
 
-# 12. drug enrichment results
-res = create_resource(snek.input[11], "drug_enrichment", "Drug Annotation Enrichment")
+# 12. drug clusters
+res = create_resource(snek.input[11], "drug_clusters", "Drug Clusters")
 resources.append(res)
 
-# 13. cell pca
-res = create_resource(snek.input[12], "cell_pca", "Cell PCA")
+# 13. drug enrichment results
+res = create_resource(snek.input[12], "drug_enrichment", "Drug Annotation Enrichment")
 resources.append(res)
 
-# 14. cell similarity matrix
+# 14. cell pca
+res = create_resource(snek.input[13], "cell_pca", "Cell PCA")
+resources.append(res)
 
-# 15. cell similarity matrix (umap projection)
+# 15. cell similarity matrix
 
-# 16. cell clusters
+# 16. cell similarity matrix (umap projection)
 
-# 17. cell average dose response curves
+# 17. cell clusters
 
-# 18. metadata
+# 18. cell average dose response curves
+
+# 19. metadata
 
 # x. figures?
 

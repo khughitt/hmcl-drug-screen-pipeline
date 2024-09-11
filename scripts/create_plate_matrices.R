@@ -189,7 +189,9 @@ plate_mdata$incomplete_controls <- plate_mdata$date == "2013-09-18"
 # KMS21BM has also been flagged as a possibly misidentified cell line;
 # https://web.expasy.org/cellosaurus/CVCL_2991
 #
-plate_mdata$outlier_cell_line <- plate_mdata$cell_line %in% c("KMS21BM_JCRB", "Karpas417_ECACC")
+# Positive controls appeared to have failed for two additional cell lines, KMS11 and KMS28BM,
+# leading to unexpected dose response curves following normalization and are similarly flagged.
+plate_mdata$outlier_cell_line <- plate_mdata$cell_line %in% snakemake@config$outlier_cells 
 
 # next, "combined" plate measurement and concentration matrices are created where
 # each column corresponds to a 1d vector representation of well values or concentrations for

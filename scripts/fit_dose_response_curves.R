@@ -17,7 +17,8 @@ fit_fxn <- LL.4(names=curve_params)
 all_plates_resp <- read_tsv(snakemake@input[[1]], show_col_types=FALSE) %>%
   as.matrix()
 
-drug_inds <- read_tsv(snakemake@input[[2]], show_col_types=FALSE)
+drug_inds <- read_tsv(snakemake@input[[2]], show_col_types=FALSE) %>%
+  filter(!cell_line %in% snakemake@config$outlier_cells)
 
 # create a list of plate matrices
 plate_lst <- list()

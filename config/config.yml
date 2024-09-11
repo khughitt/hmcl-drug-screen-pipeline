@@ -1,14 +1,14 @@
 # directory to save pipeline output to
-output_dir: "/data/proj/hmcl/drug-screen-manuscript"
+output_dir: "/data/snek/hmcl/drug-screen-manuscript"
 
 # "outlier" cell lines to be removed from downstream steps
-outlier_cells: ["KMS21BM_JCRB", "Karpas417_ECACC"]
+outlier_cells: ["KMS11_JCRBsus", "KMS21BM_JCRB", "KMS28BM_JCRB", "Karpas417_ECACC"]
 
 # number of drug clusters to detect?
 num_drug_clusters: 9
 
 # number of cell line clusters to detect?
-num_drug_clusters: 5
+num_cell_clusters: 5
 
 # drugs currently used for myeloma treatment
 mm_drugs:

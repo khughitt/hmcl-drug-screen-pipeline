@@ -42,39 +42,40 @@ rule all:
 
 rule package_results:
     input:
-        # 1-3. drug plates
+        # 1-4. drug plates
         out_dir.joinpath("drug_plates/raw.tsv"),
+        out_dir.joinpath("drug_plates/raw_filtered.tsv"),
         out_dir.joinpath("drug_plates/normed.tsv"),
         out_dir.joinpath("drug_plates/background_adjusted.tsv"),
-        # 4. plate background
+        # 5. plate background
         out_dir.joinpath("drug_plates/background.tsv"),
-        # 5. drug concentrations
+        # 6. drug concentrations
         out_dir.joinpath("drug_plates/concentrations.tsv"),
-        # 6. drug curves
+        # 7. drug curves
         out_dir.joinpath("drug_curves/drug_curves.tsv"),
-        # 7. drug response matrix (AC-50)
+        # 8. drug response matrix (AC-50)
         out_dir.joinpath("drug_response_matrices/ac50.tsv"),
-        # 8. drug pca
+        # 9. drug pca
         out_dir.joinpath("projections/data/drugs_pca.tsv"),
-        # 9. drug similarity matrix
+        # 10. drug similarity matrix
         out_dir.joinpath("similarity/drugs.tsv"),
-        # 10. drug similarity matrix (umap projection)
+        # 11. drug similarity matrix (umap projection)
         out_dir.joinpath("projections/similarity/drugs_umap.tsv"),
-        # 11. drug clusters
+        # 12. drug clusters
         out_dir.joinpath("clusters/drugs.tsv"),
-        # 12. drug enrichment results
+        # 13. drug enrichment results
         out_dir.joinpath("enrichment/drug_cluster_annotation_enrichment.tsv"),
-        # 13. cell pca
+        # 14. cell pca
         out_dir.joinpath("projections/similarity/cells_pca.tsv"),
-        # 14. cell similarity matrix
+        # 15. cell similarity matrix
         out_dir.joinpath("similarity/cells.tsv"),
-        # 15. cell similarity matrix (umap projection)
+        # 16. cell similarity matrix (umap projection)
         out_dir.joinpath("projections/similarity/cells_umap.tsv"),
-        # 16. cell clusters
+        # 17. cell clusters
         out_dir.joinpath("clusters/cells.tsv"),
-        # 17. cell average dose response curves
+        # 18. cell average dose response curves
         out_dir.joinpath("cell_viability/average_cell_viability.tsv"),
-        # 18. metadata
+        # 19. metadata
         out_dir.joinpath("metadata/drug-metadata.tsv")
     output:
         out_dir.joinpath("datapackage.yml")
@@ -83,7 +84,7 @@ rule package_results:
 
 rule visualize_drugs:
     input:
-        out_dir.joinpath("drug_curves/drug_curves_filtered.tsv"),
+        out_dir.joinpath("drug_curves/drug_curves.tsv"),
         out_dir.joinpath("projections/similarity/drugs_pca.tsv"),
         out_dir.joinpath("projections/similarity/drugs_umap.tsv"),
         out_dir.joinpath("clusters/drugs.tsv"),
@@ -113,7 +114,7 @@ rule visualize_cells:
 
 rule visualize_plates:
     input:
-        out_dir.joinpath("drug_plates/raw.tsv"),
+        out_dir.joinpath("drug_plates/raw_filtered.tsv"),
         out_dir.joinpath("drug_plates/normed.tsv"),
         out_dir.joinpath("drug_plates/background_adjusted.tsv"),
         out_dir.joinpath("drug_plates/background.tsv"),
@@ -230,19 +231,11 @@ rule create_combined_response_matrices:
 
 rule create_drug_response_matrices:
     input:
-        out_dir.joinpath("drug_curves/drug_curves_filtered.tsv"),
+        out_dir.joinpath("drug_curves/drug_curves.tsv"),
     output:
         os.path.join(out_dir, "drug_response_matrices/{response}.tsv")
     script:
         "scripts/create_dose_response_matrices.R"
-
-rule filter_outlier_cells:
-    input:
-        out_dir.joinpath("drug_curves/drug_curves.tsv"),
-    output:
-        out_dir.joinpath("drug_curves/drug_curves_filtered.tsv"),
-    script:
-        "scripts/filter_outlier_cells.R"
 
 rule fit_dose_response_curves:
     input:
@@ -264,12 +257,21 @@ rule background_adjustment:
 
 rule normalize_plates:
     input:
-        out_dir.joinpath("drug_plates/raw.tsv"),
+        out_dir.joinpath("drug_plates/raw_filtered.tsv"),
         out_dir.joinpath("metadata/plate-metadata.tsv"),
     output:
         out_dir.joinpath("drug_plates/normed.tsv"),
     script:
         "scripts/normalize_plates.R"
+
+rule filter_outlier_cells:
+    input:
+        out_dir.joinpath("drug_plates/raw.tsv"),
+        out_dir.joinpath("metadata/plate-metadata.tsv"),
+    output:
+        out_dir.joinpath("drug_plates/raw_filtered.tsv"),
+    script:
+        "scripts/filter_outlier_cells.R"
 
 rule create_plate_matrices:
     input:
