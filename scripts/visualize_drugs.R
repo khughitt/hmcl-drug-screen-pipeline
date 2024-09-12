@@ -152,13 +152,9 @@ drug_mat_all$label[match(mm_drugs, drug_mat_all$drug_id)] <- names(mm_drugs)
 ggplot(drug_mat_all, aes(x=dose, y=viability, group=drug_id)) +
   geom_line(color="#aaa") +
   geom_line(data=filter(drug_mat_all, drug_id == "average"), aes(x=dose, y=viability), colour="red", linewidth=1) +
-  geom_line(data=filter(drug_mat_all, drug_id %in% mm_drugs[1:2]), aes(x=dose, y=viability), 
-            colour="darkgreen", linewidth=0.9, linetype="dashed") +
-  geom_line(data=filter(drug_mat_all, drug_id %in% mm_drugs[3:4]), aes(x=dose, y=viability), 
+  geom_line(data=filter(drug_mat_all, drug_id %in% mm_drugs), aes(x=dose, y=viability), 
             colour="dodgerblue3", linewidth=0.9, linetype="dashed") +
-  geom_label_repel(data=filter(drug_mat_all, drug_id %in% mm_drugs[1:2]), color="darkgreen",
-                   aes(label = label), hjust="right", nudge_x = 1, na.rm = TRUE) +
-  geom_label_repel(data=filter(drug_mat_all, drug_id %in% mm_drugs[3:4]), color="dodgerblue3",
+  geom_label_repel(data=filter(drug_mat_all, drug_id %in% mm_drugs), color="dodgerblue3",
                    aes(label = label), hjust="right", nudge_x = 1, na.rm = TRUE) +
   theme_bw() +
   ggtitle("Average dose response curves by cluster (all cells)") +

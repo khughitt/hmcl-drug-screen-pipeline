@@ -21,6 +21,9 @@ plate_ids = sorted(list(set(dat.plate)))
 # exclude outlier cell lines downstream plots
 cell_lines = [x for x in cell_lines if x not in config["outlier_cells"]]
 
+mask = dat.cell_line.isin(config["outlier_cells"])
+filtered_plate_ids = sorted(list(set(dat.plate[~mask])))
+
 # filepaths for cell line-specific drug cluster plots
 cell_filepaths = [os.path.join(out_dir, "fig", "drugs", f"drug_curves_by_cluster_{cell}.png") for cell in cell_lines]
 
@@ -120,12 +123,12 @@ rule visualize_plates:
         out_dir.joinpath("drug_plates/background.tsv"),
         out_dir.joinpath("metadata/plate-metadata.tsv")
     output:
-        indiv=expand(os.path.join(out_dir, "fig/plates/indiv/{plate_id}.png"), plate_id=plate_ids),
+        indiv=expand(os.path.join(out_dir, "fig/plates/indiv/{plate_id}.png"), plate_id=filtered_plate_ids),
         mean=out_dir.joinpath("fig/plates/mean_plate.png"),
         median=out_dir.joinpath("fig/plates/median_plate.png"),
         background=out_dir.joinpath("fig/plates/background_plate.png")
     params:
-        plate_ids=plate_ids
+        plate_ids=filtered_plate_ids
     script:
         "scripts/visualize_plates.R"
 
