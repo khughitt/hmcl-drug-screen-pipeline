@@ -290,6 +290,14 @@ rule create_plate_matrices:
     script:
         "scripts/create_plate_matrices.R"
 
+rule create_cell_metadata:
+    input:
+        "data/cell-metadata.tsv"
+    output:
+        out_dir.joinpath("metadata/cell-metadata.tsv")
+    script:
+        "scripts/create_cell_metadata.R"
+
 rule copy_drug_metadata:
     input:
         "data/drug-metadata.tsv"
