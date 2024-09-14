@@ -7,7 +7,7 @@ set.seed(1)
 
 # minimum number of times a specific cell metadata variable value (i.e. factor "level") has to
 # appear to be considered for enrichment?
-MIN_FACTOR_LEVELS <- 5
+MIN_FACTOR_LEVELS <- 7
 
 # load cell similarity matrix
 cor_mat <- read_tsv(snakemake@input[[1]], show_col_types=FALSE) %>%
@@ -19,7 +19,7 @@ cell_clusters$cluster <- factor(cell_clusters$cluster)
 
 # load cell metadata
 mdat <- read_tsv(snakemake@input[[3]], show_col_types=FALSE) %>%
-  select(-cell_name)
+  select(-cell_name, -nras, -kras, -tp53, -traf3)
 
 # vectors to store result table elements
 cluster_nums <- c()
@@ -48,6 +48,10 @@ for (cluster_num in sort(unique(cell_clusters$cluster))) {
 
     # iterate over factor levels
     for (lvl in field_levels) {
+      # skip missing annotations
+      if (is.na(lvl)) {
+        next
+      }
 
       # cell annotated with the specified level?
       lvl_cells <- mdat %>%
