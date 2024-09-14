@@ -38,9 +38,9 @@ rule all:
         out_dir.joinpath("fig/drugs/drug_curves_by_cluster_all_cells.png"),
         out_dir.joinpath("fig/cells/cell_average_viability.png"),
         out_dir.joinpath("fig/plates/mean_plate.png"),
-        out_dir.joinpath("xlsx/drug_ac50.xslx"),
-        out_dir.joinpath("xlsx/drug_clusters.xslx"),
-        out_dir.joinpath("xlsx/cell_clusters.xslx"),
+        out_dir.joinpath("xlsx/drug_ac50.xlsx"),
+        out_dir.joinpath("xlsx/drug_clusters.xlsx"),
+        out_dir.joinpath("xlsx/cell_clusters.xlsx"),
         out_dir.joinpath("datapackage.yml")
 
 rule package_results:
@@ -141,9 +141,9 @@ rule create_result_tables:
         out_dir.joinpath("clusters/drugs.tsv"),
         out_dir.joinpath("metadata/drug-metadata.tsv")
     output:
-        out_dir.joinpath("xlsx/drug_ac50.xslx"),
-        out_dir.joinpath("xlsx/cell_clusters.xslx"),
-        out_dir.joinpath("xlsx/drug_clusters.xslx")
+        out_dir.joinpath("xlsx/drug_ac50.xlsx"),
+        out_dir.joinpath("xlsx/cell_clusters.xlsx"),
+        out_dir.joinpath("xlsx/drug_clusters.xlsx")
     script:
         "scripts/create_result_tables.R"
 
