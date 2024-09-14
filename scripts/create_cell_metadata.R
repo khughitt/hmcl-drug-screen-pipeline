@@ -22,15 +22,19 @@ df <- read_tsv(snakemake@input[[1]], show_col_types=FALSE)
 df <- df[df$Keats_Lab_Name %in% cells, ]
 
 df <- df %>%
-  select(cell_id=Keats_Lab_Name, cell_name=`Public Name`, sex=Sex, ancestry=Ancestry, 
+  select(cell=Keats_Lab_Name, cell_name=`Public Name`, sex=Sex, ancestry=Ancestry, 
          clinical_heavy_chain=`Clinical Heavy Chain`, clinical_light_chain=`Clinial Light Chain`,
          culture_additives=`Culture Additives`, canonical_translocations=Canonical_Translocations, 
          kras=KRAS, nras=NRAS, tp53=TP53, traf3=TRAF3)
+
+df$canonical_translocations <- gsub(':', ';', df$canonical_translocations)
 
 # derived fields
 df <- df %>%
   mutate(multiple_translocations=str_detect(canonical_translocations, '\\+')) %>%
   mutate(il6=str_detect(culture_additives, 'IL6')) %>%
+  mutate(transloc_11_14=str_detect(canonical_translocations, '\\(11;14')) %>%
+  mutate(transloc_4_14=str_detect(canonical_translocations, '\\(4;14')) %>%
   mutate(wt_kras=str_detect(kras, 'Wt')) %>%
   mutate(wt_nras=str_detect(nras, 'Wt')) %>%
   mutate(wt_tp53=str_detect(tp53, 'Wt')) %>%
@@ -38,4 +42,4 @@ df <- df %>%
   select(-culture_additives)
 
 df %>%
-  to_tsv(snakemake@output[[1]])
+  write_tsv(snakemake@output[[1]])

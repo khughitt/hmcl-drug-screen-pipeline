@@ -78,7 +78,9 @@ rule package_results:
         out_dir.joinpath("clusters/cells.tsv"),
         # 18. cell average dose response curves
         out_dir.joinpath("cell_viability/average_cell_viability.tsv"),
-        # 19. metadata
+        # 19. cell enrichment results
+        out_dir.joinpath("enrichment/cell_cluster_annotation_enrichment.tsv"),
+        # 20. metadata
         out_dir.joinpath("metadata/drug-metadata.tsv")
     output:
         out_dir.joinpath("datapackage.yml")
@@ -154,6 +156,16 @@ rule quantify_drug_cluster_annotation_enrichment:
         out_dir.joinpath("enrichment/drug_cluster_annotation_enrichment.tsv")
     script:
         "scripts/quantify_drug_cluster_annotation_enrichment.R"
+
+rule quantify_cell_cluster_annotation_enrichment:
+    input:
+        out_dir.joinpath("similarity/cells.tsv"),
+        out_dir.joinpath("clusters/cells.tsv"),
+        out_dir.joinpath("metadata/cell-metadata.tsv")
+    output:
+        out_dir.joinpath("enrichment/cell_cluster_annotation_enrichment.tsv")
+    script:
+        "scripts/quantify_cell_cluster_annotation_enrichment.R"
 
 rule compute_average_cell_viability_curves:
     input:
