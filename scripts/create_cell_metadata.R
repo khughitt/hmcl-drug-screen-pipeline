@@ -17,9 +17,30 @@ cells <- c("AMO1_DSMZ", "ARD_JJKsccE7", "ARP1_JJKsccF8", "Delta47_JCRB", "EJM_DS
            "OCIMY7_PLB", "OPM1_PLB", "OPM2_DSMZ", "PCM6_RIKEN", "PE2_PLB", "RPMI8226_ATCC",
            "SKMM1_PLB", "U266_ATCC", "UTMC2_PLB", "VP6_DJ", "XG1_PLB", "XG6_PLB")
 
+# load keats hmcl metadata
 df <- read_tsv(snakemake@input[[1]], show_col_types=FALSE)
 
 df <- df[df$Keats_Lab_Name %in% cells, ]
+
+df <- df %>%
+  select(cell=Keats_Lab_Name, cell_name=`Public Name`, sex=Sex, ancestry=Ancestry, 
+         clinical_heavy_chain=`Clinical Heavy Chain`, clinical_light_chain=`Clinial Light Chain`,
+         culture_additives=`Culture Additives`, canonical_translocations=Canonical_Translocations, 
+         kras=KRAS, nras=NRAS, tp53=TP53, traf3=TRAF3)
+
+df$canonical_translocations <- gsub(':', ';', df$canonical_translocations)
+
+# add derived fields
+df <- df %>%
+  mutate(multiple_translocations=str_detect(canonical_translocations, '\\+')) %>%
+  mutate(il6=str_detect(culture_additives, 'IL6')) %>%
+  mutate(transloc_11_14=str_detect(canonical_translocations, '\\(11;14')) %>%
+  mutate(transloc_4_14=str_detect(canonical_translocations, '\\(4;14')) %>%
+  mutate(wt_kras=str_detect(kras, 'Wt')) %>%
+  mutate(wt_nras=str_detect(nras, 'Wt')) %>%
+  mutate(wt_tp53=str_detect(tp53, 'Wt')) %>%
+  mutate(wt_traf3=str_detect(traf3, 'Wt')) %>%
+  select(-culture_additives)
 
 # add sarin et al., (2020) rankings
 sarin2020 <- read_tsv(snakemake@input[[2]], show_col_types=FALSE) %>%
@@ -42,25 +63,13 @@ mapping <- data.frame(
 sarin_ids <- mapping$sarin[match(df$cell_name, mapping$keats)]
 df$sarin2020_rank <- sarin2020$rank[match(sarin_ids, sarin2020$cell_line)]
 
-df <- df %>%
-  select(cell=Keats_Lab_Name, cell_name=`Public Name`, sex=Sex, ancestry=Ancestry, 
-         clinical_heavy_chain=`Clinical Heavy Chain`, clinical_light_chain=`Clinial Light Chain`,
-         culture_additives=`Culture Additives`, canonical_translocations=Canonical_Translocations, 
-         kras=KRAS, nras=NRAS, tp53=TP53, traf3=TRAF3, sarin2020_rank)
+# add cell line cluster assignments and save result
+clusters <- read_tsv(snakemake@input[[3]], show_col_types=FALSE)
 
-df$canonical_translocations <- gsub(':', ';', df$canonical_translocations)
-
-# derived fields
 df <- df %>%
-  mutate(multiple_translocations=str_detect(canonical_translocations, '\\+')) %>%
-  mutate(il6=str_detect(culture_additives, 'IL6')) %>%
-  mutate(transloc_11_14=str_detect(canonical_translocations, '\\(11;14')) %>%
-  mutate(transloc_4_14=str_detect(canonical_translocations, '\\(4;14')) %>%
-  mutate(wt_kras=str_detect(kras, 'Wt')) %>%
-  mutate(wt_nras=str_detect(nras, 'Wt')) %>%
-  mutate(wt_tp53=str_detect(tp53, 'Wt')) %>%
-  mutate(wt_traf3=str_detect(traf3, 'Wt')) %>%
-  select(-culture_additives)
+  left_join(clusters, by="cell") %>%
+  select(cell, cell_name, cluster, everything()) %>%
+  arrange(cluster)
 
 df %>%
   write_tsv(snakemake@output[[1]])

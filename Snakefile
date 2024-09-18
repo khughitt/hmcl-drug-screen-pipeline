@@ -178,7 +178,8 @@ rule quantify_cell_cluster_annotation_enrichment:
 rule create_cell_metadata:
     input:
         "data/cell-metadata.tsv",
-        "data/sarin2020_table_s1.tsv"
+        "data/sarin2020_table_s1.tsv",
+        out_dir.joinpath("clusters/cells.tsv")
     output:
         out_dir.joinpath("metadata/cell-metadata.tsv")
     script:
