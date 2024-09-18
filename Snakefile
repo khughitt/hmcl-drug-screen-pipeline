@@ -157,6 +157,14 @@ rule quantify_drug_cluster_annotation_enrichment:
     script:
         "scripts/quantify_drug_cluster_annotation_enrichment.R"
 
+rule copy_drug_metadata:
+    input:
+        "data/drug-metadata.tsv"
+    output:
+        out_dir.joinpath("metadata/drug-metadata.tsv")
+    shell:
+        "cp {input} {output}"
+
 rule quantify_cell_cluster_annotation_enrichment:
     input:
         out_dir.joinpath("similarity/cells.tsv"),
@@ -166,6 +174,15 @@ rule quantify_cell_cluster_annotation_enrichment:
         out_dir.joinpath("enrichment/cell_cluster_annotation_enrichment.tsv")
     script:
         "scripts/quantify_cell_cluster_annotation_enrichment.R"
+
+rule create_cell_metadata:
+    input:
+        "data/cell-metadata.tsv",
+        "data/sarin2020_table_s1.tsv"
+    output:
+        out_dir.joinpath("metadata/cell-metadata.tsv")
+    script:
+        "scripts/create_cell_metadata.R"
 
 rule compute_average_cell_viability_curves:
     input:
@@ -301,21 +318,5 @@ rule create_plate_matrices:
         plate_ids=plate_ids
     script:
         "scripts/create_plate_matrices.R"
-
-rule create_cell_metadata:
-    input:
-        "data/cell-metadata.tsv"
-    output:
-        out_dir.joinpath("metadata/cell-metadata.tsv")
-    script:
-        "scripts/create_cell_metadata.R"
-
-rule copy_drug_metadata:
-    input:
-        "data/drug-metadata.tsv"
-    output:
-        out_dir.joinpath("metadata/drug-metadata.tsv")
-    shell:
-        "cp {input} {output}"
 
 # vi:ft=snakemake

@@ -5,7 +5,7 @@ output_dir: "/data/snek/hmcl/drug-screen-manuscript"
 outlier_cells: ["KMS11_JCRBsus", "KMS21BM_JCRB", "KMS28BM_JCRB", "Karpas417_ECACC"]
 
 # number of drug clusters to detect?
-num_drug_clusters: 2
+num_drug_clusters: 9
 
 # number of cell line clusters to detect?
 num_cell_clusters: 2

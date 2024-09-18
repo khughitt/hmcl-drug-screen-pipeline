@@ -28,7 +28,7 @@ df_pca <- cell_pca %>%
   inner_join(cell_clusters, by="cell")
 
 ggplot(df_pca, aes(x=PC1, y=PC2, color=cluster)) +
-  geom_point() +
+  geom_point(size=2.5) +
   ggtitle("HMCL Cell Similarity (PCA)") +
   guides(fill=guide_legend(title="Cluster")) +
   theme_bw()
@@ -40,7 +40,7 @@ df_umap <- cell_umap %>%
   inner_join(cell_clusters, by="cell")
 
 ggplot(df_umap, aes(x=UMAP1, y=UMAP2, color=cluster)) +
-  geom_point() +
+  geom_point(size=2.5) +
   ggtitle("HMCL Cell Similarity (UMAP)") +
   guides(fill=guide_legend(title="Cluster")) +
   theme_bw()
