@@ -10,6 +10,7 @@
 library(tidyverse)
 library(uwot)
 library(ggrepel)
+library(ggh4x)
 
 set.seed(1)
 
@@ -112,6 +113,16 @@ ordered_cells <- cell_clusters %>%
 
 average_ac50$cell_line <- factor(average_ac50$cell_line, levels=ordered_cells)
 
+# show cluster sizes in sub-headings
+num_clusts <- snakemake@config$num_drug_clusters
+clust_counts <- table(drug_clusters$cluster)
+labels <- sprintf("%s (n=%d)", names(clust_counts), clust_counts)
+average_ac50$cluster <- factor(average_ac50$cluster, levels=1:num_clusts, labels=labels)
+
+# color facet strips to match cluster colors
+cluster_colors <- scales::hue_pal()(num_clusts)
+strip <- strip_themed(background_x=elem_list_rect(fill=cluster_colors))
+
 ggplot(average_ac50, aes(x=cell_line, y=ac50, fill=cell_cluster)) +
   geom_bar(stat="identity") +
   theme_bw() +
@@ -120,7 +131,7 @@ ggplot(average_ac50, aes(x=cell_line, y=ac50, fill=cell_cluster)) +
   ggtitle("Mean AC-50 by Drug Cluster") +
   xlab("Cell Line") +
   ylab("AC-50") +
-  facet_wrap(~cluster, ncol=3)
+  facet_wrap2(~cluster, strip=strip)
 
 ggsave(snakemake@output[[3]], width=1080, height=1080, units="px", dpi=92)
 

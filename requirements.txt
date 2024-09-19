@@ -5,6 +5,7 @@ pandas
 snakemake-minimal
 r-tidyverse
 r-drc
+r-ggh4x
 r-ggrepel
 r-lattice
 r-nmf
