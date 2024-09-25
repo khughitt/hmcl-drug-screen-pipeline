@@ -6,7 +6,6 @@
 # 3. average cell viabilities
 #
 library(tidyverse)
-library(uwot)
 library(ggrepel)
 
 set.seed(1)
@@ -19,16 +18,19 @@ cell_umap <- read_tsv(snakemake@input[[2]], show_col_types=FALSE)
 cell_clusters <- read_tsv(snakemake@input[[3]], show_col_types=FALSE) %>%
   mutate(cluster = factor(cluster))
 
+# most common concentrations for each dose (nM)
+drug_conc <- c(0.779, 2.34, 7.01, 21.0, 63.1, 189.0, 568, 1700, 5116, 15300, 46000)
+
 # load cell average viabilities
 cell_factors <- read_tsv(snakemake@input[[4]], show_col_types=FALSE)
-cell_factors$Dose <- factor(cell_factors$Dose, levels=1:11, labels=paste0("dose_", 0:10))
+cell_factors$Dose <- factor(cell_factors$Dose, levels=1:11, labels=as.character(drug_conc))
 
 # 1) PCA plot
 df_pca <- cell_pca %>%
   inner_join(cell_clusters, by="cell")
 
 ggplot(df_pca, aes(x=PC1, y=PC2, color=cluster)) +
-  geom_point(size=2.5) +
+  geom_point(size=4.0) +
   ggtitle("HMCL Cell Similarity (PCA)") +
   guides(fill=guide_legend(title="Cluster")) +
   theme_bw()
@@ -40,7 +42,7 @@ df_umap <- cell_umap %>%
   inner_join(cell_clusters, by="cell")
 
 ggplot(df_umap, aes(x=UMAP1, y=UMAP2, color=cluster)) +
-  geom_point(size=2.5) +
+  geom_point(size=4.0) +
   ggtitle("HMCL Cell Similarity (UMAP)") +
   guides(fill=guide_legend(title="Cluster")) +
   theme_bw()
@@ -64,7 +66,7 @@ ggplot(cell_factors, aes(x=Dose, y=Viability, group=`Cell Line`, color=`Cell Lin
   theme_bw() +
   theme(axis.text.x=element_text(hjust=0.5)) +
   theme(legend.text=element_text(size=8)) +
-  xlab("Dose number") +
+  xlab("Concentration (nM)") +
   ylab("Mean cell viability")
 
 ggsave(snakemake@output[[3]], width=1920, height=1080, units="px", dpi=192)

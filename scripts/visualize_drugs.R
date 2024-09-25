@@ -18,6 +18,12 @@ set.seed(1)
 mm_drugs <- snakemake@config$mm_drugs$ids
 mm_drugs <- setNames(mm_drugs, snakemake@config$mm_drugs$names)
 
+# separate mm drugs into "standard of care" drugs, and others
+mm_soc_names <- c("Bortezomib", "Carfilzomib", "Pomalidomide", "Lenalidomide", "Dexamethasone")
+mm_soc <- mm_drugs[names(mm_drugs) %in% mm_soc_names]
+
+mm_non_soc <- mm_drugs[!mm_drugs %in% mm_soc]
+
 # load drug curves
 drug_curves <- read_tsv(snakemake@input[[1]])
 
@@ -126,14 +132,15 @@ strip <- strip_themed(background_x=elem_list_rect(fill=cluster_colors))
 ggplot(average_ac50, aes(x=cell_line, y=ac50, fill=cell_cluster)) +
   geom_bar(stat="identity") +
   theme_bw() +
-  theme(axis.text.x=element_text(angle=90, hjust=1, vjust=0.5)) +
+  theme(axis.text.x=element_text(angle=90, hjust=1, vjust=0.5),
+        strip.text=element_text(face="bold", size=rel(1.2)) +
   guides(fill=guide_legend(title="Cell Line Cluster")) +
   ggtitle("Mean AC-50 by Drug Cluster") +
   xlab("Cell Line") +
   ylab("AC-50") +
   facet_wrap2(~cluster, strip=strip)
 
-ggsave(snakemake@output[[3]], width=1080, height=1080, units="px", dpi=92)
+ggsave(snakemake@output[[3]], width=1780, height=1080, units="px", dpi=92)
 
 # 4) drug curves visualized for each cluster, averaged across all cell lines
 drug_mat_all <- drug_curves %>%
@@ -161,12 +168,17 @@ drug_mat_all$label[match(mm_drugs, drug_mat_all$drug_id)] <- names(mm_drugs)
 
 # visualize drug curves by cluster
 ggplot(drug_mat_all, aes(x=dose, y=viability, group=drug_id)) +
-  geom_line(color="#aaa") +
-  geom_line(data=filter(drug_mat_all, drug_id == "average"), aes(x=dose, y=viability), colour="red", linewidth=1) +
-  geom_line(data=filter(drug_mat_all, drug_id %in% mm_drugs), aes(x=dose, y=viability), 
-            colour="dodgerblue3", linewidth=0.9, linetype="dashed") +
-  geom_label_repel(data=filter(drug_mat_all, drug_id %in% mm_drugs), color="dodgerblue3",
-                   aes(label = label), hjust="right", nudge_x = 1, na.rm = TRUE) +
+  geom_line(color="#aaa", linewidth=0.45) +
+  geom_line(data=filter(drug_mat_all, drug_id == "average"), aes(x=dose, y=viability), 
+            colour="red", linewidth=0.9, alpha=0.7) +
+  geom_line(data=filter(drug_mat_all, drug_id %in% mm_non_soc), aes(x=dose, y=viability), 
+            colour="dodgerblue3", linewidth=0.7, linetype="solid") +
+  geom_line(data=filter(drug_mat_all, drug_id %in% mm_soc), aes(x=dose, y=viability), 
+            colour="magenta3", linewidth=0.7, linetype="solid") +
+  geom_label_repel(data=filter(drug_mat_all, drug_id %in% mm_non_soc), color="dodgerblue3",
+                   aes(label = label), hjust="right", nudge_x = 1, na.rm = TRUE, size = 2.0) +
+  geom_label_repel(data=filter(drug_mat_all, drug_id %in% mm_soc), color="magenta3", #fill="#ffff5c",
+                   aes(label = label), hjust="right", nudge_x = 1, na.rm = TRUE, size = 2.0) +
   theme_bw() +
   ggtitle("Average dose response curves by cluster (all cells)") +
   facet_wrap(~cluster, ncol=3)

@@ -31,7 +31,7 @@ writeLines(as.character(var_explained), fp)
 close(fp)
 
 # UMAP (cells)
-umap_cells <- umap(cells, n_neighbors=5, n_components=2)
+umap_cells <- umap(cells, n_neighbors=15, n_components=2)
 colnames(umap_cells) <- c("UMAP1", "UMAP2")
 
 umap_cells %>%
