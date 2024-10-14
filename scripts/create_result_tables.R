@@ -20,7 +20,8 @@ mdat <- read_tsv(snakemake@input[[4]], show_col_types = FALSE) %>%
 # 1) create ac-50 table
 drug_ac50 <- drug_ac50 %>%
   inner_join(mdat, by="drug_id") %>%
-  select(cell_line, drug_name, drug_id, ac50)
+  select(cell_line, drug_name, drug_id, ac50) %>%
+  rename(`AC-50 (nM)`=ac50)
 
 openxlsx::write.xlsx(list(ac50=drug_ac50), file=snakemake@output[[1]])
 

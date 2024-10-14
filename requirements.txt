@@ -13,3 +13,6 @@ r-uwot
 r-rspectra
 r-viridis
 r-openxlsx
+xlrd
+xlwt
+openpyxl

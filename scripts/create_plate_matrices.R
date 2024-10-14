@@ -100,10 +100,6 @@ for (group_id in sort(unique(drug_groups$drug_group))) {
     sort()
 }
 
-drug_group_mapping <- stack(drug_group_members) %>%
-  select(drug_group=ind, ncgc_id=values) %>%
-  filter(ncgc_id != "DMSO")
-
 # next, each plate is scored based on how often viability measurements match an idealized sigmoidal
 # drug response curve with increasing dose.
 # this can be useful to help flag potentially problematic plates with behavior that deviates
@@ -250,4 +246,3 @@ write_tsv(as.data.frame(well_mat), snakemake@output[[1]])
 write_tsv(as.data.frame(conc_mat), snakemake@output[[2]])
 write_tsv(plate_mdata, snakemake@output[[3]])
 write_tsv(drug_inds, snakemake@output[[4]])
-write_tsv(drug_group_mapping, snakemake@output[[5]])

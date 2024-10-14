@@ -19,7 +19,7 @@ cell_clusters$cluster <- factor(cell_clusters$cluster)
 
 # load cell metadata
 mdat <- read_tsv(snakemake@input[[3]], show_col_types=FALSE) %>%
-  select(-cell_name, -nras, -kras, -tp53, -traf3)
+  select(-cell_name, -cluster, -nras, -kras, -tp53, -traf3)
 
 # vectors to store result table elements
 cluster_nums <- c()
