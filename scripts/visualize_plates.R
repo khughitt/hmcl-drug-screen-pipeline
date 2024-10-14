@@ -62,19 +62,22 @@ for (plate_id in snakemake@params[["plate_ids"]]) {
   plts <- list()
 
   plts[[1]] <- levelplot(t(raw_plate), col.regions=plasma(500),
-                         scales=list(x=list(rot=90)),
+                         scales=list(x=list(rot=90, fontface="bold"),
+                                     y=list(fontface="bold")),
                          xlab="", ylab="",
                          colorkey=legend_params,
                          main="Raw")
 
   plts[[2]] <- levelplot(t(normed_plate), col.regions=plasma(500),
-                         scales=list(x=list(rot=90)),
+                         scales=list(x=list(rot=90, fontface="bold"),
+                                     y=list(fontface="bold")),
                          xlab="", ylab="",
                          colorkey=legend_params,
                          main="Normed")
 
   plts[[3]] <- levelplot(t(bgadj_plate), col.regions=plasma(500),
-                         scales=list(x=list(rot=90)),
+                         scales=list(x=list(rot=90, fontface="bold"),
+                                     y=list(fontface="bold")),
                          xlab="", ylab="",
                          colorkey=legend_params,
                          main="Background-adjusted")
@@ -90,10 +93,10 @@ colnames(mean_plate) <- cnames
 
 png(snakemake@output$mean, width=1920, height=1080)
 levelplot(t(mean_plate), col.regions=plasma(500),
-          scales=list(x=list(rot=90, cex=1.2), y=list(cex=1.2)),
+          scales=list(x=list(rot=90, cex=1.4, fontface="bold"), y=list(cex=1.4, fontface="bold")),
           xlab="", ylab="",
           colorkey=legend_params,
-          main=list(label="Raw plates (mean)", cex=2.0))
+          main=list(label="Raw plates (mean)", cex=2.5))
 dev.off()
 
 median_plate <- matrix(apply(raw_combined, 1, median), nrow=PLATE_NUM_ROWS)
@@ -101,17 +104,17 @@ colnames(median_plate) <- cnames
 
 png(snakemake@output$median, width=1920, height=1080)
 levelplot(t(median_plate), col.regions=plasma(500),
-          scales=list(x=list(rot=90, cex=1.2), y=list(cex=1.2)),
+          scales=list(x=list(rot=90, cex=1.4, fontface="bold"), y=list(cex=1.4, fontface="bold")),
           xlab="", ylab="",
           colorkey=legend_params,
-          main=list(label="Raw plates (median)", cex=2.0))
+          main=list(label="Raw plates (median)", cex=2.5))
 dev.off()
 
 # visualize background image
 png(snakemake@output$background, width=1920, height=1080)
 levelplot(t(background_plate), col.regions=plasma(500),
-          scales=list(x=list(rot=90, cex=1.2), y=list(cex=1.2)),
+          scales=list(x=list(rot=90, cex=1.4, fontface="bold"), y=list(cex=1.4, fontface="bold")),
           xlab="", ylab="",
           colorkey=legend_params,
-          main=list(label="Background Image", cex=2.0))
+          main=list(label="Background Image", cex=2.5))
 dev.off()
