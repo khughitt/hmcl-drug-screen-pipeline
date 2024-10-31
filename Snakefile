@@ -132,7 +132,8 @@ rule visualize_cells:
         out_dir.joinpath("projections/drugs_pca_var.txt"),
         out_dir.joinpath("projections/cells_umap.tsv"),
         out_dir.joinpath("clusters/cells.tsv"),
-        out_dir.joinpath("cell_viability/average_cell_viability.tsv")
+        out_dir.joinpath("cell_viability/average_cell_viability.tsv"),
+        out_dir.joinpath("metadata/cell-metadata.tsv")
     output:
         out_dir.joinpath("fig/cells/cell_pca_clusters.png"),
         out_dir.joinpath("fig/cells/cell_umap_clusters.png"),

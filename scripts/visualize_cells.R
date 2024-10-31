@@ -27,12 +27,21 @@ drug_conc <- c(0.779, 2.34, 7.01, 21.0, 63.1, 189.0, 568, 1700, 5116, 15300, 460
 cell_factors <- read_tsv(snakemake@input[[5]], show_col_types=FALSE)
 cell_factors$Dose <- factor(cell_factors$Dose, levels=1:11, labels=as.character(drug_conc))
 
+# load cell metadata
+cell_mdat <- read_tsv(snakemake@input[[6]], show_col_types=FALSE)
+
+cell_names <- cell_mdat %>%
+  select(cell, cell_name)
+
 # 1) PCA plot
 df_pca <- cell_pca %>%
-  inner_join(cell_clusters, by="cell")
+  inner_join(cell_clusters, by="cell") %>%
+  inner_join(cell_names, by="cell")
 
 ggplot(df_pca, aes(x=PC1, y=PC2, color=cluster)) +
   geom_point(size=4.0) +
+  geom_label_repel(aes(label=cell_name),
+                   fontface="bold", hjust=0.8, nudge_x=-0.4, na.rm=TRUE, size=2.2, label.padding=0.15) +
   ggtitle("HMCL Cell Similarity (PCA)") +
   guides(color=guide_legend(title="Cluster")) +
   xlab(sprintf("PC1 (%0.2f %% variance)", pca_var[1])) +
@@ -47,10 +56,13 @@ ggsave(snakemake@output[[1]], width=1440, height=810, units="px", dpi=128)
 
 # 2) UMAP plot
 df_umap <- cell_umap %>%
-  inner_join(cell_clusters, by="cell")
+  inner_join(cell_clusters, by="cell") %>%
+  inner_join(cell_names, by="cell")
 
 ggplot(df_umap, aes(x=UMAP1, y=UMAP2, color=cluster)) +
   geom_point(size=4.0) +
+  geom_label_repel(aes(label=cell_name),
+                   fontface="bold", hjust=0.8, nudge_x=-0.4, na.rm=TRUE, size=2.2, label.padding=0.15) +
   ggtitle("HMCL Cell Similarity (UMAP)") +
   guides(color=guide_legend(title="Cluster")) +
   theme_bw() +
@@ -59,8 +71,7 @@ ggplot(df_umap, aes(x=UMAP1, y=UMAP2, color=cluster)) +
         legend.text=element_text(size=rel(1.3)),
         legend.title=element_text(size=rel(1.2)))
 
-
-ggsave(snakemake@output[[2]], width=1920, height=1080, units="px", dpi=128)
+ggsave(snakemake@output[[2]], width=1440, height=810, units="px", dpi=128)
 
 # 3) average cell viability plot
 
