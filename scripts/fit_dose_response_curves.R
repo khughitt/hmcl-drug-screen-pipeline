@@ -32,8 +32,8 @@ for (i in seq_len(ncol(all_plates_resp))) {
 
 # next, iterate over cell lines and drugs
 cell_drugs <- drug_inds %>%
-  select(plate, cell_line, drug_id) %>%
-  distinct()
+  dplyr::select(plate, cell_line, drug_id) %>%
+  dplyr::distinct()
 
 # store output rows in a list of lists
 res_lst <- list()
@@ -62,9 +62,13 @@ for (i in seq_len(nrow(cell_drugs))) {
   # fit dose response model
   res <- tryCatch({
     fit <- drm(viability ~ conc, fct=fit_fxn)
-    as.numeric(coef(fit))
+
+    coefs <- as.numeric(coef(fit))
+    ac50_pval <- summary(fit)$coefficients["ac50:(Intercept)", "p-value"]
+
+    c(coefs, ac50_pval)
   }, error = function(e) {
-    rep(NA, 4)
+    rep(NA, 5)
   })
 
   res_lst[[i]] <- c(cell, drug, plate_id, res, viability, conc)
@@ -72,7 +76,7 @@ for (i in seq_len(nrow(cell_drugs))) {
 
 # convert nested list to a tibble
 cnames <- c("cell_line", "drug_id", "plate_id",
-            "slope", "lower_limit", "upper_limit", "ac50",
+            "slope", "lower_limit", "upper_limit", "ac50", "ac50_pval",
             paste0("dose_", 0:10),
             paste0("conc_", 0:10))
 
@@ -85,6 +89,6 @@ curve_df <- res_lst %>%
 curve_df$lac50 <- log10(curve_df$ac50 / 1e6)
 
 curve_df <- curve_df %>%
-  dplyr::select(cell_line, drug_id, plate_id, slope, lower_limit, upper_limit, ac50, lac50, everything())
+  dplyr::select(cell_line, drug_id, plate_id, slope, lower_limit, upper_limit, ac50, lac50, ac50_pval, everything())
 
 write_tsv(curve_df, snakemake@output[[1]])
