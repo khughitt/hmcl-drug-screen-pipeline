@@ -20,9 +20,10 @@ control_outliers <- plate_mdata %>%
   pull(plate)
 
 # for each plate:
-#  1. compute mean positive control
-#  2. compute mean negitive control
-#  3. apply norm eqn to all cells
+#  1. clip to [0, 0.995 quantile]
+#  2. compute median positive control
+#  3. compute median negitive control
+#  4. apply norm eqn to all cells
 for (i in seq_len(ncol(plate_mat))) {
   # clip negative values (only affects a very small number of measurements)
   plate_mat[, i] <- pmax(plate_mat[, i], 0)
@@ -45,7 +46,7 @@ for (i in seq_len(ncol(plate_mat))) {
     median_neg <- max(plate_mat[, i])
   }
 
-  # normalized viability (%)=100 * ( well - pos control ) / ( neg control - pos control)
+  # normalized viability (%)=100 * ( well - pos control ) / ( neg control - pos control )
   plate_mat[, i] <- 100 * (plate_mat[, i] - median_pos) / (median_neg - median_pos)
 }
 
