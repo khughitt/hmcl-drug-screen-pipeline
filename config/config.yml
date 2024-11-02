@@ -8,7 +8,7 @@ outlier_cells: ["KMS11_JCRBsus", "KMS21BM_JCRB", "KMS28BM_JCRB", "Karpas417_ECAC
 num_drug_clusters: 9
 
 # number of cell line clusters to detect?
-num_cell_clusters: 2
+num_cell_clusters: 3
 
 # drugs currently/previously used for myeloma treatment
 mm_drugs:
