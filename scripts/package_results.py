@@ -13,8 +13,8 @@ snek = snakemake
 # helper function to create data resource objects
 def create_resource(path:str, name:str, title:str, include_schema=True):
     res = describe(path, stats=True)
-    res.name = "plates_raw"
-    res.title = "Drug plate matrix (raw)"
+    res.name = name
+    res.title = title
 
     if not include_schema:
         res.schema = None
@@ -119,10 +119,10 @@ res = create_resource(snek.input[28], "average_cell_viability", "Average Cell Vi
 resources.append(res)
 
 # 30-31. combined viability matrices
-res = create_resource(snek.input[29], "combined_viability_cells", "All viability measurements by cell")
+res = create_resource(snek.input[29], "combined_viability_cells", "All viability measurements by cell", include_schema=False)
 resources.append(res)
 
-res = create_resource(snek.input[30], "combined_viability_drugs", "All viability measurements by drug")
+res = create_resource(snek.input[30], "combined_viability_drugs", "All viability measurements by drug", include_schema=False)
 resources.append(res)
 
 # 32-33. annotation enrichment results
