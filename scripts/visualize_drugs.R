@@ -124,7 +124,7 @@ ggsave(snakemake@output[[2]], width=1440, height=810, units="px", dpi=128)
 
 # 3) Mean cell line AC-50 by cluster
 ac50_mat <- drug_curves %>%
-  select(-plate_id, -slope, -lower_limit, -upper_limit, -lac50, -starts_with("conc"), -starts_with("dose")) %>%
+  select(-plate_id, -slope, -lower_limit, -upper_limit, -lac50, -ac50_pval, -starts_with("conc"), -starts_with("dose")) %>%
   inner_join(drug_clusters, by="drug_id")
 
 # clip large values to improve resolution
@@ -173,7 +173,7 @@ ggsave(snakemake@output[[3]], width=2160, height=1215, units="px", dpi=192)
 
 # 4) drug curves visualized for each cluster, averaged across all cell lines
 drug_mat_all <- drug_curves %>%
-  select(-cell_line, -plate_id, -slope, -lower_limit, -upper_limit, -ac50, -lac50, -starts_with("conc")) %>%
+  select(-cell_line, -plate_id, -slope, -lower_limit, -upper_limit, -ac50, -ac50_pval, -lac50, -starts_with("conc")) %>%
   group_by(drug_id) %>%
   summarize(across(everything(), mean)) %>%
   inner_join(drug_clusters, by="drug_id") %>%
@@ -236,7 +236,7 @@ ggsave(snakemake@output[[4]], width=1920, height=1620, units="px", dpi=288)
 
 # 5+) drug curves visualized for each cluster and for each cell line
 drug_mat <- drug_curves %>%
-  select(-plate_id, -slope, -lower_limit, -upper_limit, -ac50, -lac50, -starts_with("conc")) %>%
+  select(-plate_id, -slope, -lower_limit, -upper_limit, -ac50, -ac50_pval, -lac50, -starts_with("conc")) %>%
   inner_join(drug_clusters, by="drug_id")
 
 for (cell in unique(drug_mat$cell_line)) {
