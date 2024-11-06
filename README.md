@@ -7,33 +7,45 @@ perform basic pre-processing and normalization for a large-scale human multiple 
 ("HMCL") drug screen dataset generated at the [National Center for Advancing Translational Sciences
 (NCATS)](https://ncats.nih.gov/).
 
-## Data availability..
+## Data availability
 
-## Paper..
+Raw + processed versions of the HMCL drugscreen data is available on Zenodo:
+
+- [https://zenodo.org/records/13910207](https://zenodo.org/records/13910207)
 
 ## Usage
 
-If you wish to run the data processing pipeline yourself, the first step is to clone this repository 
-and initialize a conda environment with the required dependencies:
+If you wish to run the data processing pipeline yourself, start by cloning the repo:
 
 ```
-git clone xx
+git clone https://github.com/khughitt/hmcl-drug-screen-pipeline
 ```
 
-Download and install [conda](https://docs.conda.io/en/latest/) (or a variant such as
+Next, download and install [conda](https://docs.conda.io/en/latest/) (or a variant such as
 [mamba](https://mamba.readthedocs.io), which is used below) if it is not already present on your
 system.
 
-TODO: add option specifying how one can use exported environment file / specific versions..
+Once you have `conda` or `mamba` installed, create a new conda environment with the necessary
+requiments:
 
 ```
 mamba create -c conda-forge --file requirements.txt -n "hmcl"
 ```
 
-Install [ggpubfigs]() (not available via conda) for colorblind-friendly color palettes:
+If you are using `conda`, simply replace "mamba" with "conda".
+
+Next, to configure the pipeline parameters, including where output should be stored, edit the config
+file `config/config.yml` and adjust the settings as desired.
+
+The default settings can be used to reproduce the tables, figures, and intermediate datasets
+described in the manuscript and available on Zenodo.
+
+Finally, to run the pipeline, activate the conda environment and call `snakemake`, specifying the
+desired number of threads, e.g.:
 
 ```
-R  -e 'devtools::install_github("JLSteenwyk/ggpubfigs")'
+mamba activate hmcl
+snakemake -j2
 ```
 
 ## Related data
