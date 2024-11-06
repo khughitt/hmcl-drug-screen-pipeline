@@ -30,6 +30,12 @@ TODO: add option specifying how one can use exported environment file / specific
 mamba create -c conda-forge --file requirements.txt -n "hmcl"
 ```
 
+Install [ggpubfigs]() (not available via conda) for colorblind-friendly color palettes:
+
+```
+R  -e 'devtools::install_github("JLSteenwyk/ggpubfigs")'
+```
+
 ## Related data
 
 In addition to the drug screen data described here, other omics data including RNA-Seq, CNV, and

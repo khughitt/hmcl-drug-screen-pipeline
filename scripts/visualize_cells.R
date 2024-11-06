@@ -10,6 +10,10 @@ library(ggrepel)
 
 set.seed(1)
 
+# colorblind friend palettes
+# https://github.com/JLSteenwyk/ggpubfigs
+pal_cells <- c("#648FFF", "#FE6100", "#785EF0")
+
 # load cell similarity matrix PCA and UMAP projections
 cell_pca <- read_tsv(snakemake@input[[1]], show_col_types=FALSE)
 pca_var <- as.numeric(readLines(snakemake@input[[2]]))
@@ -46,6 +50,7 @@ ggplot(df_pca, aes(x=PC1, y=PC2, color=cluster)) +
   guides(color=guide_legend(title="Cluster")) +
   xlab(sprintf("PC1 (%0.2f %% variance)", pca_var[1])) +
   ylab(sprintf("PC2 (%0.2f %% variance)", pca_var[2])) +
+  scale_color_manual(values=pal_cells) +
   theme_bw() +
   theme(axis.text=element_text(size=rel(1.45)),
         axis.title=element_text(size=rel(1.2)),
@@ -65,6 +70,7 @@ ggplot(df_umap, aes(x=UMAP1, y=UMAP2, color=cluster)) +
                    fontface="bold", hjust=0.8, nudge_x=-0.4, na.rm=TRUE, size=2.2, label.padding=0.15) +
   ggtitle("HMCL Cell Similarity (UMAP)") +
   guides(color=guide_legend(title="Cluster")) +
+  scale_color_manual(values=pal_cells) +
   theme_bw() +
   theme(axis.text=element_text(size=rel(1.3)),
         axis.title=element_text(size=rel(1.3)),

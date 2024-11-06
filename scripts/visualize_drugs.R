@@ -19,6 +19,11 @@ mean_curve_color <- "#777777"
 highlight_color1 <- "#f23639"
 highlight_color2 <- "#1B49CD"
 
+# colorblind friend palettes
+# https://github.com/JLSteenwyk/ggpubfigs
+pal_cells <- c("#648FFF", "#FE6100", "#785EF0")
+pal_drugs = c("#332288", "#117733", "#CC6677", "#88CCEE", "#999933", "#882255", "#44AA99", "#DDCC77", "#AA4499")
+
 # mm drugs
 mm_drugs <- snakemake@config$mm_drugs$ids
 mm_drugs <- setNames(mm_drugs, snakemake@config$mm_drugs$names)
@@ -97,6 +102,7 @@ ggplot(df_pca, aes(x=PC1, y=PC2, color=cluster)) +
   guides(color=guide_legend(title="Cluster")) +
   xlab(sprintf("PC1 (%0.2f %% variance)", pca_var[1])) +
   ylab(sprintf("PC2 (%0.2f %% variance)", pca_var[2])) +
+  scale_color_manual(values=pal_drugs) +
   theme_bw() +
   theme(axis.title=element_text(size=rel(1.45)),
         axis.text=element_text(size=rel(1.2)),
@@ -105,7 +111,7 @@ ggplot(df_pca, aes(x=PC1, y=PC2, color=cluster)) +
 
 ggsave(snakemake@output[[1]], width=1440, height=810, units="px", dpi=128)
 
-# 1) UMAP plot (color = cluster)
+# 2) UMAP plot (color = cluster)
 df_umap <- drug_umap %>%
   inner_join(mdat, by="drug_id") %>%
   inner_join(drug_clusters, by="drug_id")
@@ -114,6 +120,7 @@ ggplot(df_umap, aes(x=UMAP1, y=UMAP2, color=cluster)) +
   geom_point() +
   ggtitle("HMCL Drug Similarity (UMAP)") +
   guides(color=guide_legend(title="Cluster")) +
+  scale_color_manual(values=pal_drugs) +
   theme_bw() +
   theme(axis.title=element_text(size=rel(1.45)),
         axis.text=element_text(size=rel(1.2)),
@@ -153,11 +160,16 @@ labels <- sprintf("%s (n=%d)", names(clust_counts), clust_counts)
 average_ac50$cluster <- factor(average_ac50$cluster, levels=1:num_clusts, labels=labels)
 
 # color facet strips to match cluster colors
-cluster_colors <- scales::hue_pal()(num_clusts)
-strip <- strip_themed(background_x=elem_list_rect(fill=cluster_colors))
+#text_x = elem_list_text(colour=c("#000000"))
+strip <- strip_themed(
+  background_x=elem_list_rect(fill=pal_drugs),
+  text_x = list(element_text(colour="#eeeeee"), NULL, NULL, NULL, NULL, 
+                element_text(colour="#eeeeee"), NULL, NULL, NULL)
+)
 
 ggplot(average_ac50, aes(x=cell_line, y=ac50, fill=cell_cluster)) +
   geom_bar(stat="identity") +
+  scale_fill_manual(values=pal_cells) +
   theme_bw() +
   theme(axis.text=element_text(face="bold"),
         axis.text.x=element_text(angle=90, hjust=1, vjust=0.5, size=rel(0.75)),

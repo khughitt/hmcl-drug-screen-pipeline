@@ -10,6 +10,9 @@ from frictionless import describe, Package
 
 snek = snakemake
 
+# abstract from the manuscript
+abstract="Multiple myeloma, a hematopoietic malignancy of terminally differentiated B cells, is the second most common hematological malignancy after leukemia. While patients have benefited from numerous advances in treatment in recent years resulting in significant increases to average survival time following diagnosis, myeloma remains incurable and relapse is common. To help identify novel therapeutic agents with efficacy against the disease and to search for biomarkers associated with differential response to treatment, a large-scale pharmacological screen was performed with 1,912 small molecule compounds tested at 11 doses for 47 human myeloma cell lines (HMCL). Raw and processed versions of the drug screen dataset are provided, as well as supportive information including drug and cell line metadata and high-level characterization of the most salient features of each. The dataset is publicly available at Zenodo and the workflow code used for data processing and generation of supporting figures and tables can be found at https://github.com/khughitt/hmcl-drug-screen-pipeline."
+
 # helper function to create data resource objects
 def create_resource(path:str, name:str, title:str, include_schema=True):
     res = describe(path, stats=True)
@@ -157,6 +160,7 @@ pkg = Package(
     resources=resources,
     name="hmcl_drug_screen",
     title="Human Myeloma Cell Line (HMCL) NCATS MIPE 4.0 Drug Screen Dataset",
+    description="ABSTRACT: " + abstract,
     homepage="https://zenodo.org/records/13910207",
     created=datetime.datetime.now().isoformat(),
     licenses=[{
