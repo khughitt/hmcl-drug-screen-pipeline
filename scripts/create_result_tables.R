@@ -21,7 +21,7 @@ mdat <- read_tsv(snakemake@input[[4]], show_col_types = FALSE) %>%
 drug_ac50 <- drug_ac50 %>%
   inner_join(mdat, by="drug_id") %>%
   select(cell_line, drug_name, drug_id, ac50) %>%
-  rename(`AC-50 (nM)`=ac50)
+  rename(`AC-50 (M)`=ac50)
 
 openxlsx::write.xlsx(list(ac50=drug_ac50), file=snakemake@output[[1]])
 
