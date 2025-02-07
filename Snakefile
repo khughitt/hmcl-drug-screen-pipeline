@@ -209,7 +209,8 @@ rule create_cell_metadata:
     input:
         "data/cell-metadata.tsv",
         "data/sarin2020_table_s1.tsv",
-        out_dir.joinpath("clusters/cells.tsv")
+        out_dir.joinpath("clusters/cells.tsv"),
+        out_dir.joinpath("cell_viability/average_cell_viability.tsv")
     output:
         out_dir.joinpath("metadata/cell-metadata.tsv")
     script:

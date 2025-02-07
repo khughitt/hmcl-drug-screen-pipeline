@@ -7,6 +7,8 @@
 #
 library(tidyverse)
 
+snek <- snakemake
+
 # 47 cell lines
 cells <- c("AMO1_DSMZ", "ARD_JJKsccE7", "ARP1_JJKsccF8", "Delta47_JCRB", "EJM_DSMZ", "FR4_PLB",
            "H1112_PLB", "INA6_PLB", "JIM1_ECACC", "JIM3_ECACC", "JJN3_DSMZ", "Karpas25_ECACC",
@@ -18,7 +20,7 @@ cells <- c("AMO1_DSMZ", "ARD_JJKsccE7", "ARP1_JJKsccF8", "Delta47_JCRB", "EJM_DS
            "SKMM1_PLB", "U266_ATCC", "UTMC2_PLB", "VP6_DJ", "XG1_PLB", "XG6_PLB")
 
 # load keats hmcl metadata
-df <- read_tsv(snakemake@input[[1]], show_col_types=FALSE)
+df <- read_tsv(snek@input[[1]], show_col_types=FALSE)
 
 df <- df[df$Keats_Lab_Name %in% cells, ]
 
@@ -43,7 +45,7 @@ df <- df %>%
   select(-culture_additives)
 
 # add sarin et al., (2020) rankings
-sarin2020 <- read_tsv(snakemake@input[[2]], show_col_types=FALSE) %>%
+sarin2020 <- read_tsv(snek@input[[2]], show_col_types=FALSE) %>%
   select(cell_line=`Cell Line`, rank=Rank)
 
 mapping <- data.frame(
@@ -63,13 +65,24 @@ mapping <- data.frame(
 sarin_ids <- mapping$sarin[match(df$cell_name, mapping$keats)]
 df$sarin2020_rank <- sarin2020$rank[match(sarin_ids, sarin2020$cell_line)]
 
-# add cell line cluster assignments and save result
-clusters <- read_tsv(snakemake@input[[3]], show_col_types=FALSE)
+# add cell line cluster assignments
+clusters <- read_tsv(snek@input[[3]], show_col_types=FALSE)
 
 df <- df %>%
-  left_join(clusters, by="cell") %>%
-  select(cell, cell_name, cluster, everything()) %>%
-  arrange(cluster)
+  left_join(clusters, by="cell")
 
+# add average cell line viabilities
+cell_viabilities <- read_tsv(snek@input[[4]], show_col_types=FALSE) %>%
+  group_by(cell=`Cell Line`) %>%
+  summarize(mean_viability=mean(Viability))
+
+df <- df %>%
+  left_join(cell_viabilities, by="cell")
+
+df <- df %>%
+  select(cell, cell_name, cluster, everything()) %>%
+  arrange(cluster, cell_name)
+
+# save result
 df %>%
-  write_tsv(snakemake@output[[1]])
+  write_tsv(snek@output[[1]])
