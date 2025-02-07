@@ -3,7 +3,8 @@
 #
 # 1. cell similarity pca plot
 # 2. drug similarity umap plot
-# 3. average cell viabilities
+# 3. average cell viabilities (color = cell line)
+# 4. average cell viabilities (color = cluster)
 #
 library(tidyverse)
 library(ggrepel)
@@ -96,7 +97,24 @@ ggplot(cell_factors, aes(x=Dose, y=Viability, group=`Cell Line`, color=`Cell Lin
   theme(axis.text=element_text(face="bold"),
         axis.text.x=element_text(hjust=0.5),
         legend.text=element_text(size=8, face="bold")) +
+  ggtitle("Average Cell Line Viability") +
   xlab("Concentration (nM)") +
-  ylab("Mean cell viability")
+  ylab("Mean cell viability (scaled)")
 
 ggsave(snakemake@output[[3]], width=1920, height=1080, units="px", dpi=192)
+
+# 4) average cell viability plot (by cell line cluster)
+cell_factors$Cluster <- cell_clusters$cluster[match(cell_factors$`Cell Line`, cell_clusters$cell)]
+
+ggplot(cell_factors, aes(x=Dose, y=Viability, group=`Cell Line`, color=`Cluster`)) +
+  geom_line() +
+  theme_bw() +
+  theme(axis.text=element_text(face="bold"),
+        axis.text.x=element_text(hjust=0.5),
+        legend.text=element_text(size=8, face="bold")) +
+  scale_color_manual(values=pal_cells) +
+  ggtitle("Average Cell Line Viability") +
+  xlab("Concentration (nM)") +
+  ylab("Mean cell viability (scaled)")
+
+ggsave(snakemake@output[[4]], width=1920, height=1080, units="px", dpi=192)

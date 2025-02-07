@@ -35,11 +35,14 @@ rule all:
         out_dir.joinpath("fig/drugs/drug_umap_clusters.png"),
         out_dir.joinpath("fig/drugs/drug_cluster_mean_ac50.png"),
         out_dir.joinpath("fig/drugs/drug_curves_by_cluster_all_cells.png"),
+        out_dir.joinpath("fig/drugs/drug_median_ac50_by_cell_cluster.png"),
         out_dir.joinpath("fig/cells/cell_average_viability.png"),
+        out_dir.joinpath("fig/cells/cell_average_viability_by_cluster.png"),
         out_dir.joinpath("fig/plates/mean_plate.png"),
         out_dir.joinpath("xlsx/drug_ac50.xlsx"),
         out_dir.joinpath("xlsx/drug_clusters.xlsx"),
         out_dir.joinpath("xlsx/cell_clusters.xlsx"),
+        out_dir.joinpath("xlsx/drug_ac50_summary.xlsx"),
         out_dir.joinpath("datapackage.yml")
 
 rule package_results:
@@ -111,6 +114,7 @@ rule package_results:
 rule visualize_drugs:
     input:
         out_dir.joinpath("drug_curves/drug_curves.tsv"),
+        out_dir.joinpath("drug_response_matrices/ac50.tsv"),
         out_dir.joinpath("projections/drugs_pca.tsv"),
         out_dir.joinpath("projections/drugs_pca_var.txt"),
         out_dir.joinpath("projections/drugs_umap.tsv"),
@@ -122,6 +126,7 @@ rule visualize_drugs:
         out_dir.joinpath("fig/drugs/drug_umap_clusters.png"),
         out_dir.joinpath("fig/drugs/drug_cluster_mean_ac50.png"),
         out_dir.joinpath("fig/drugs/drug_curves_by_cluster_all_cells.png"),
+        out_dir.joinpath("fig/drugs/drug_median_ac50_by_cell_cluster.png"),
         cell_filepaths
     script:
         "scripts/visualize_drugs.R"
@@ -137,7 +142,8 @@ rule visualize_cells:
     output:
         out_dir.joinpath("fig/cells/cell_pca_clusters.png"),
         out_dir.joinpath("fig/cells/cell_umap_clusters.png"),
-        out_dir.joinpath("fig/cells/cell_average_viability.png")
+        out_dir.joinpath("fig/cells/cell_average_viability.png"),
+        out_dir.joinpath("fig/cells/cell_average_viability_by_cluster.png")
     script:
         "scripts/visualize_cells.R"
 
@@ -169,7 +175,7 @@ rule create_result_tables:
         out_dir.joinpath("xlsx/cell_clusters.xlsx"),
         out_dir.joinpath("xlsx/drug_clusters.xlsx")
     script:
-        "scripts/create_result_tables.R"
+        "scripts/create_result_tables.R" 
 
 rule quantify_drug_cluster_annotation_enrichment:
     input:
@@ -246,6 +252,16 @@ rule reduce_similarity_matrix_dimensions:
         out_dir.joinpath("projections/drugs_umap.tsv"),
     script:
         "scripts/reduce_dimensions.R"
+
+rule compute_drug_summary_statistics:
+  input:
+    out_dir.joinpath("drug_response_matrices/ac50.tsv"),
+    out_dir.joinpath("metadata/drug-metadata.tsv"),
+    out_dir.joinpath("clusters/drugs.tsv")
+  output:
+    out_dir.joinpath("xlsx/drug_ac50_summary.xlsx"),
+  script:
+    "scripts/compute_drug_summary_statistics.R"
 
 rule compute_drug_similarity:
     input:

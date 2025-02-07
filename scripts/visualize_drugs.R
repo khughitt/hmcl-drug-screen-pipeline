@@ -42,24 +42,28 @@ mm_non_soc <- c(mm_non_soc_left, mm_non_soc_right)
 # load drug curves
 drug_curves <- read_tsv(snakemake@input[[1]])
 
+# load cell x drug AC-50 matrix
+ac50_mat <- read_tsv(snakemake@input[[2]]) %>%
+  column_to_rownames("cell_line")
+
 # load drug similarity matrix PCA projection
-drug_pca <- read_tsv(snakemake@input[[2]], show_col_types=FALSE)
-pca_var <- as.numeric(readLines(snakemake@input[[3]]))
+drug_pca <- read_tsv(snakemake@input[[3]], show_col_types=FALSE)
+pca_var <- as.numeric(readLines(snakemake@input[[4]]))
 
 # load drug similarity matrix UMAP projection
-drug_umap <- read_tsv(snakemake@input[[4]], show_col_types=FALSE)
+drug_umap <- read_tsv(snakemake@input[[5]], show_col_types=FALSE)
 
 # load drug cluster assignments
-drug_clusters <- read_tsv(snakemake@input[[5]], show_col_types=FALSE)
+drug_clusters <- read_tsv(snakemake@input[[6]], show_col_types=FALSE)
 drug_clusters$cluster <- factor(drug_clusters$cluster)
 
 # load cell cluster assignments
-cell_clusters <- read_tsv(snakemake@input[[6]], show_col_types=FALSE) %>%
+cell_clusters <- read_tsv(snakemake@input[[7]], show_col_types=FALSE) %>%
   rename(cell_line=cell, cell_cluster=cluster) %>%
   mutate(cell_cluster=factor(cell_cluster))
 
 # load drug metadata
-mdat <- read_tsv(snakemake@input[[7]], col_types=cols(.default="c")) %>%
+mdat <- read_tsv(snakemake@input[[8]], col_types=cols(.default="c")) %>%
   select(drug_id=sample_id,
          drug_name=sample_name,
          binary_pharmacology,
@@ -130,15 +134,15 @@ ggplot(df_umap, aes(x=UMAP1, y=UMAP2, color=cluster)) +
 ggsave(snakemake@output[[2]], width=1440, height=810, units="px", dpi=128)
 
 # 3) Mean cell line AC-50 by cluster
-ac50_mat <- drug_curves %>%
+drug_curves_ac50 <- drug_curves %>%
   select(-plate_id, -slope, -lower_limit, -upper_limit, -lac50, -ac50_pval, -starts_with("conc"), -starts_with("dose")) %>%
   inner_join(drug_clusters, by="drug_id")
 
 # clip large values to improve resolution
-max_ac50 <- quantile(ac50_mat$ac50, 0.99, na.rm=TRUE)
-ac50_mat$ac50 <- pmin(ac50_mat$ac50, max_ac50)
+max_ac50 <- quantile(drug_curves_ac50$ac50, 0.99, na.rm=TRUE)
+drug_curves_ac50$ac50 <- pmin(drug_curves_ac50$ac50, max_ac50)
 
-average_ac50 <- ac50_mat %>%
+average_ac50 <- drug_curves_ac50 %>%
   group_by(cluster, cell_line) %>%
   summarize(ac50=mean(ac50, na.rm=TRUE)) %>%
   select(cell_line, ac50, cluster)
@@ -246,7 +250,41 @@ ggplot(drug_mat_all, aes(x=dose, y=viability, group=drug_id)) +
   facet_wrap2(~cluster, strip=strip)
 ggsave(snakemake@output[[4]], width=1920, height=1620, units="px", dpi=288)
 
-# 5+) drug curves visualized for each cluster and for each cell line
+# 5) average drug ac-50 (by cell line cluster)
+clust1_cells <- cell_clusters %>%
+  filter(cell_cluster == 1) %>%
+  pull(cell_line)
+
+clust2_cells <- cell_clusters %>%
+  filter(cell_cluster == 2) %>%
+  pull(cell_line)
+
+clust3_cells <- cell_clusters %>%
+  filter(cell_cluster == 3) %>%
+  pull(cell_line)
+
+cluster_averages <- apply(ac50_mat[clust1_cells, ], 2, median, na.rm=TRUE) %>%
+  enframe("drug_id", "cluster1")
+
+cluster_averages$cluster2 <- apply(ac50_mat[clust2_cells, ], 2, median, na.rm=TRUE)
+cluster_averages$cluster3 <- apply(ac50_mat[clust3_cells, ], 2, median, na.rm=TRUE)
+
+cluster_df <- cluster_averages %>%
+  pivot_longer(-drug_id, names_to="cluster", values_to="median_ac50")
+
+cluster_df$Cluster <- factor(cluster_df$cluster)
+
+save.image()
+
+ggplot(cluster_df, aes(x=median_ac50, fill=Cluster, group=Cluster)) +
+  geom_histogram(alpha=0.65, position="dodge") +
+  scale_fill_manual(values=pal_cells) +
+  xlab("AC-50 (median)") +
+  ggtitle("Median AC-50 (By cell line cluster)")
+
+ggsave(snakemake@output[[5]], width=1920, height=1080, units="px", dpi=192)
+
+# 6+) drug curves visualized for each cluster and for each cell line
 drug_mat <- drug_curves %>%
   select(-plate_id, -slope, -lower_limit, -upper_limit, -ac50, -ac50_pval, -lac50, -starts_with("conc")) %>%
   inner_join(drug_clusters, by="drug_id")
@@ -282,3 +320,4 @@ for (cell in unique(drug_mat$cell_line)) {
   outfile <- sub("all_cells", cell, snakemake@output[[4]])
   ggsave(outfile, width=1080, height=1080, units="px", dpi=92)
 }
+

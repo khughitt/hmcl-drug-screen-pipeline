@@ -14,12 +14,12 @@ cell_clusters <- read_tsv(snakemake@input[[2]], show_col_types=FALSE) %>%
 
 drug_clusters <- read_tsv(snakemake@input[[3]], show_col_types=FALSE)
 
-mdat <- read_tsv(snakemake@input[[4]], show_col_types = FALSE) %>%
+drug_mdat <- read_tsv(snakemake@input[[4]], show_col_types = FALSE) %>%
   select(drug_id=sample_id, drug_name=sample_name)
 
 # 1) create ac-50 table
 drug_ac50 <- drug_ac50 %>%
-  inner_join(mdat, by="drug_id") %>%
+  inner_join(drug_mdat, by="drug_id") %>%
   select(cell_line, drug_name, drug_id, ac50) %>%
   rename(`AC-50 (M)`=ac50)
 
@@ -41,7 +41,7 @@ openxlsx::write.xlsx(cell_tbls, file=snakemake@output[[2]])
 drug_tbls <- list()
 
 drug_clusters <- drug_clusters %>%
-  inner_join(mdat, by="drug_id") %>%
+  inner_join(drug_mdat, by="drug_id") %>%
   select(drug_name, drug_id, cluster)
 
 for (drug_cluster in sort(unique(drug_clusters$cluster))) {
