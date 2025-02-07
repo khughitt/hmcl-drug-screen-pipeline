@@ -258,7 +258,8 @@ rule compute_drug_summary_statistics:
   input:
     out_dir.joinpath("drug_response_matrices/ac50.tsv"),
     out_dir.joinpath("metadata/drug-metadata.tsv"),
-    out_dir.joinpath("clusters/drugs.tsv")
+    out_dir.joinpath("clusters/drugs.tsv"),
+    out_dir.joinpath("clusters/cells.tsv")
   output:
     out_dir.joinpath("xlsx/drug_ac50_summary.xlsx"),
   script:
