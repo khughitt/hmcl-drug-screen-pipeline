@@ -166,7 +166,7 @@ pkg = Package(
     name="hmcl_drug_screen",
     title="Human Myeloma Cell Line (HMCL) NCATS MIPE 4.0 Drug Screen Dataset",
     description="ABSTRACT: " + abstract,
-    homepage="https://zenodo.org/records/13910207",
+    homepage="https://zenodo.org/records/14859847",
     created=datetime.datetime.now().isoformat(),
     licenses=[{
         "name": "CC-BY-4.0",
