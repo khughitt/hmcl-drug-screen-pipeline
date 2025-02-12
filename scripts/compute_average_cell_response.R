@@ -1,5 +1,5 @@
 #
-# Visualizes cell line viability averaged across all drugs
+# Computes cell line viability averaged across all drugs
 #
 library(tidyverse)
 

@@ -104,7 +104,10 @@ rule package_results:
         out_dir.joinpath("metadata/drug-metadata.tsv"),
         out_dir.joinpath("metadata/plate-metadata.tsv"),
 
-        # 38. raw data
+        # 38. mutation data
+        out_dir.joinpath("mutations/hmcl-predicted-mutations.tsv"),
+
+        # 39. raw data
         out_dir.joinpath("raw/data.tsv")
     output:
         out_dir.joinpath("datapackage.yml")
@@ -186,14 +189,6 @@ rule quantify_drug_cluster_annotation_enrichment:
         out_dir.joinpath("enrichment/drug_cluster_annotation_enrichment.tsv")
     script:
         "scripts/quantify_drug_cluster_annotation_enrichment.R"
-
-rule copy_drug_metadata:
-    input:
-        "data/drug-metadata.tsv"
-    output:
-        out_dir.joinpath("metadata/drug-metadata.tsv")
-    shell:
-        "cp {input} {output}"
 
 rule quantify_cell_cluster_annotation_enrichment:
     input:
@@ -346,6 +341,22 @@ rule create_plate_matrices:
         plate_ids=plate_ids
     script:
         "scripts/create_plate_matrices.R"
+
+rule copy_mutation_data:
+    input:
+        "data/hmcl-predicted-mutations.tsv"
+    output:
+        out_dir.joinpath("mutations/hmcl-predicted-mutations.tsv")
+    shell:
+        "cp {input} {output}"
+
+rule copy_drug_metadata:
+    input:
+        "data/drug-metadata.tsv"
+    output:
+        out_dir.joinpath("metadata/drug-metadata.tsv")
+    shell:
+        "cp {input} {output}"
 
 rule copy_raw_data:
     input:

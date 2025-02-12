@@ -5,7 +5,8 @@
 # 2. drug similarity umap plot
 # 3. drug AC-50 by cluster/cell line
 # 4. drug curves by cluster/all
-# 5+. drug curves by cluster/cell line
+# 5. median drug AC-50 values, by cell cluster
+# 6+. drug curves by cluster/cell line
 #
 library(tidyverse)
 library(uwot)
@@ -167,7 +168,7 @@ average_ac50$cluster <- factor(average_ac50$cluster, levels=1:num_clusts, labels
 #text_x = elem_list_text(colour=c("#000000"))
 strip <- strip_themed(
   background_x=elem_list_rect(fill=pal_drugs),
-  text_x = list(element_text(colour="#eeeeee"), NULL, NULL, NULL, NULL, 
+  text_x = list(element_text(colour="#eeeeee"), NULL, NULL, NULL, NULL,
                 element_text(colour="#eeeeee"), NULL, NULL, NULL)
 )
 
@@ -280,6 +281,7 @@ ggplot(cluster_df, aes(x=median_ac50, fill=Cluster, group=Cluster)) +
   geom_histogram(alpha=0.65, position="dodge") +
   scale_fill_manual(values=pal_cells) +
   xlab("AC-50 (median)") +
+  ylab("Count") +
   ggtitle("Median AC-50 (By cell line cluster)")
 
 ggsave(snakemake@output[[5]], width=1920, height=1080, units="px", dpi=192)
