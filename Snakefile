@@ -94,20 +94,16 @@ rule package_results:
         out_dir.joinpath("combined_viability_matrices/cells.tsv"),
         out_dir.joinpath("combined_viability_matrices/drugs.tsv"),
 
-        # 32-33. annotation enrichment results
-        out_dir.joinpath("enrichment/cell_cluster_annotation_enrichment.tsv"),
-        out_dir.joinpath("enrichment/drug_cluster_annotation_enrichment.tsv"),
-
-        # 34-37. metadata
+        # 32-35. metadata
         out_dir.joinpath("metadata/cell-metadata.tsv"),
         out_dir.joinpath("metadata/drug-indices.tsv"),
         out_dir.joinpath("metadata/drug-metadata.tsv"),
         out_dir.joinpath("metadata/plate-metadata.tsv"),
 
-        # 38. mutation data
+        # 36. mutation data
         out_dir.joinpath("mutations/hmcl-predicted-mutations.tsv"),
 
-        # 39. raw data
+        # 37. raw data
         out_dir.joinpath("raw/data.tsv")
     output:
         out_dir.joinpath("datapackage.yml")
@@ -179,26 +175,6 @@ rule create_result_tables:
         out_dir.joinpath("xlsx/drug_clusters.xlsx")
     script:
         "scripts/create_result_tables.R" 
-
-rule quantify_drug_cluster_annotation_enrichment:
-    input:
-        out_dir.joinpath("similarity/drugs.tsv"),
-        out_dir.joinpath("clusters/drugs.tsv"),
-        out_dir.joinpath("metadata/drug-metadata.tsv")
-    output:
-        out_dir.joinpath("enrichment/drug_cluster_annotation_enrichment.tsv")
-    script:
-        "scripts/quantify_drug_cluster_annotation_enrichment.R"
-
-rule quantify_cell_cluster_annotation_enrichment:
-    input:
-        out_dir.joinpath("similarity/cells.tsv"),
-        out_dir.joinpath("clusters/cells.tsv"),
-        out_dir.joinpath("metadata/cell-metadata.tsv")
-    output:
-        out_dir.joinpath("enrichment/cell_cluster_annotation_enrichment.tsv")
-    script:
-        "scripts/quantify_cell_cluster_annotation_enrichment.R"
 
 rule create_cell_metadata:
     input:

@@ -128,31 +128,24 @@ resources.append(res)
 res = create_resource(snek.input[30], "combined_viability_drugs", "All viability measurements by drug", include_schema=False)
 resources.append(res)
 
-# 32-33. annotation enrichment results
-res = create_resource(snek.input[31], "cell_enrichment", "Cell Annotation Enrichment")
-resources.append(res)
-
-res = create_resource(snek.input[32], "drug_enrichment", "Drug Annotation Enrichment")
-resources.append(res)
-
-# 34-37. metadata
-res = create_resource(snek.input[33], "cell_metadata", "Cell line metadata")
+# 32-35. metadata
+res = create_resource(snek.input[31], "cell_metadata", "Cell line metadata")
 res.sources = [{
     "title": "Keats Lab Data Repository",
     "path": "https://www.keatslab.org/data-repository"
 }]
 resources.append(res)
 
-res = create_resource(snek.input[34], "drug_indices", "Drug, cell plate and dose for each plate and position")
+res = create_resource(snek.input[32], "drug_indices", "Drug, cell plate and dose for each plate and position")
 resources.append(res)
 
-res = create_resource(snek.input[35], "drug_metadata", "Drug metadata")
+res = create_resource(snek.input[33], "drug_metadata", "Drug metadata")
 resources.append(res)
 
-res = create_resource(snek.input[36], "plate_metadata", "Plate metadata")
+res = create_resource(snek.input[34], "plate_metadata", "Plate metadata")
 resources.append(res)
 
-res = create_resource(snek.input[37], "mutation_data", "Predicted mutations")
+res = create_resource(snek.input[35], "mutation_data", "Predicted mutations")
 res.sources = [{
     "title": "Keats Lab Data Repository",
     "path": "https://www.keatslab.org/data-repository"
@@ -160,7 +153,7 @@ res.sources = [{
 
 resources.append(res)
 
-res = create_resource(snek.input[38], "raw_data", "Raw drugscreen data")
+res = create_resource(snek.input[36], "raw_data", "Raw drugscreen data")
 resources.append(res)
 
 # convert absolute resource paths to relative paths
