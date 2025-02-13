@@ -7,18 +7,18 @@ ARD	Yes	ARD_JJKsccE7	UAMS_Series		Europe	IgA	Kappa	Kappa	None	t(14;16)				HD				
 ARP1	Yes	ARP1_JJKsccF8	UAMS_Series		Europe	IgA	Kappa	Kappa	None	t(14:16)				HD					HD	
 BCN										t(14;16)						Wt	Wt		Wt	
 CAG	Yes	CAG_JJKsccG6	UAMS_Series		Europe	IgA	Kappa	Kappa	None	t(14;16)				HD					HD	
-COLO-677	Yes	COLO677_DSMZ	8226_Series	Male	Africa	IgG	Lambda	Lambda	None	t(16;22) + t(8;22)						G12A - het (cc)			E285K - homo (cc)	
+COLO-677	Yes	COLO677_DSMZ	8226_Series	Male	Africa	IgG	Lambda	Lambda	None	t(16;22)  t(8;22)						G12A - het (cc)			E285K - homo (cc)	
 Delta47	Yes	Delta47_JCRB	Delta47_JCRB	Male	East Asia	IgD	Lambda	Lambda	None	t(8;22)	4					Wt	Wt			Wt
-DP-6	Yes	DP6_DJ	DP6_DJ	Female	Europe	IgA	Lambda	Lambda	IL6 (Independent in Keats Lab)	t(8;14)			V600E - Het (cc)	HD					FS - het + Y107X - het (cc)	
-EJM	Yes	EJM_DSMZ	EJM_DSMZ	Female	Europe	IgG	Lambda	Lambda	None	t(14;20)	1					See Note	Wt		K132N - homo (CCLE) (cc)	Wt
+DP-6	Yes	DP6_DJ	DP6_DJ	Female	Europe	IgA	Lambda	Lambda	IL6 (Independent in Keats Lab)	t(8;14)			V600E - Het (cc)	HD					FS - het  Y107X - het (cc)	
+EJM	Yes	EJM_DSMZ	EJM_DSMZ	Female	Europe	IgG	Lambda	Lambda	None	t(14;20)	1						Wt		K132N - homo (CCLE) (cc)	Wt
 FLAM-76	Yes	FLAM76_JCRB	FLAM76_JCRB	Male	East Asia	Non-Secretory	Kappa	Kappa	None	t(11;14)						Wt	Wt		S240R - het (cc)	Wt
 FR4	Yes	FR4_PLB	FR4_PLB	Male	East Asia	IgA	Kappa	Kappa	None	t(8;14)						A146T - het (cc)	Wt		R175R - homo (cc)	Wt
 H1112	Yes	H1112_PLB	H1112_PLB		Africa			Lambda	None	t(11;14)	5					A146V - het (cc)	Wt		R248W - het (cc)	Wt
-INA-6	Yes	INA6_PLB	INA6_PLB	Male	Europe	IgG	Kappa	Kappa	IL6 (Independent in Keats Lab)	t(11;14)	6						G12D - het (cc -see note)		Q331X - het + K132M - het (cc)	Wt
+INA-6	Yes	INA6_PLB	INA6_PLB	Male	Europe	IgG	Kappa	Kappa	IL6 (Independent in Keats Lab)	t(11;14)	6						G12D - het (cc)		Q331X - het  K132M - het (cc)	Wt
 JIM-1	Yes	JIM1_ECACC	JIM_Series	Male	Europe	IgA	Lambda	Lambda	None	t(4;14)									R273C - homo (cc)	
 JIM-3	Yes	JIM3_ECACC	JIM_Series	Male	Europe	IgA	Lambda	Lambda	None	t(4;14)	3				Not Expressed	G12D - het (cc)	Wt		R273C - homo (cc)	Wt
-JJN-3	Yes	JJN3_DSMZ	JJN3_DSMZ	Female	Europe	IgA1	Kappa	Kappa	None	t(14;16) + t(8;14)						Wt	See Note		HD (?)	Wt
-JK-6L	Yes	JK6L_PLB	JK6L_PLB	Male	Europe	IgG	Kappa	Kappa	IL6 (Independent in Keats Lab)		2					Q61L - het (cc)	Y64D - homo (cc)*		Splice-Site - het (cc)	Wt
+JJN-3	Yes	JJN3_DSMZ	JJN3_DSMZ	Female	Europe	IgA1	Kappa	Kappa	None	t(14;16)  t(8;14)						Wt			HD	Wt
+JK-6L	Yes	JK6L_PLB	JK6L_PLB	Male	Europe	IgG	Kappa	Kappa	IL6 (Independent in Keats Lab)		2					Q61L - het (cc)	Y64D - homo (cc)		Splice-Site - het (cc)	Wt
 JMW-1	Yes	JMW1_PLB	JMW1_PLB		Europe			Kappa	IL6 (Independent in Keats Lab)	t(4;14)	3					G12V - het (cc)				
 Karpas 25	Yes	Karpas25_ECACC	Karpas25_ECACC	Female	Europe	IgG	Kappa	Kappa	None	t(1;20)		BIRC3 - E332X - het (cc)								
 Karpas 417	Yes	Karpas417_ECACC	Karpas417_ECACC	Male	Europe	IgG	Kappa	Kappa	None	t(8;14)	2						Q61K - het (cc)			
@@ -28,29 +28,29 @@ KAS-6/1	Yes	KAS61_DJ	KAS61_DJ	Female	Europe	IgG	Kappa	Kappa	IL6 (Independent in 
 KAS-6/2										t(4;14)										
 KHM-11	Yes	KHM11_PLB	KHM11_PLB	Male	East Asia	IgA	Kappa	Kappa	None	t(4;14)					Expressed	Wt	Q61K - het (cc)			Wt
 KHM-1B	Yes	KHM1B_JCRB	KHM1B_JCRB	Male	East Asia	IgA	Lambda	Lambda	None	t(8;22)	2			HD		G12C - het (cc)			HD	Wt
-KMM-1	Yes	KMM1_JCRB	KMM1_JCRB	Male	East Asia		Lambda	Lambda	None	t(6;14) + t(8;14)	4					Wt	G13D - homo (cc)		S241F - het (CCLE)(cc)	Wt
-KMS-11	Yes	KMS11_JCRBadh	KMS11_Series	Female	East Asia	IgG	Kappa	Kappa	None	t(4;14) + t(8;14) + t(14;16)					Y373C - Het (cc) Expressed	Wt	Wt		HD	HD -> K191LfsX3
-KMS-11	Yes	KMS11_JCRBsus	KMS11_Series	Female	East Asia	IgG	Kappa	Kappa	None	t(4;14) + t(8;14) + t(14;16)	1									
-KMS-11	Yes	KMS11_JPN	KMS11_Series	Female	East Asia	IgG	Kappa	Kappa	None	t(4;14) + t(8;14) + t(14;16)										
+KMM-1	Yes	KMM1_JCRB	KMM1_JCRB	Male	East Asia		Lambda	Lambda	None	t(6;14)  t(8;14)	4					Wt	G13D - homo (cc)		S241F - het (CCLE)(cc)	Wt
+KMS-11	Yes	KMS11_JCRBadh	KMS11_Series	Female	East Asia	IgG	Kappa	Kappa	None	t(4;14)  t(8;14)  t(14;16)					Y373C - Het (cc) Expressed	Wt	Wt		HD	HD -> K191LfsX3
+KMS-11	Yes	KMS11_JCRBsus	KMS11_Series	Female	East Asia	IgG	Kappa	Kappa	None	t(4;14)  t(8;14)  t(14;16)	1									
+KMS-11	Yes	KMS11_JPN	KMS11_Series	Female	East Asia	IgG	Kappa	Kappa	None	t(4;14)  t(8;14)  t(14;16)										
 KMS-12BM	Yes	KMS12BM_JCRB	KMS12_Series	Female	East Asia	Non-Secretory	Non-Secretory		None	t(11;14)	6				R158W - het	Wt	Wt		R337L - homo (cc)	Wt
 KMS-12PE	Yes	KMS12PE_JCRB	KMS12_Series	Female	East Asia	Non-Secretory	Non-Secretory		None	t(11;14)				HD	S321C - het (cc)	Wt	Wt		R337L - Homo (cc)	Wt
 KMS-18	Yes	KMS18_PLB	KMS18_PLB	Male	East Asia	IgA	Lambda	Lambda	None	t(4;14)	3	HD			G382D - het (cc) Expressed					Wt
 KMS-20	Yes	KMS20_JCRB	KMS20_JCRB	Female	East Asia	IgG	Kappa	Kappa	None	t(8;14)	2	HD		HD		G12S - homo (cc)			Y126X - homo (CCLE)(cc)	Wt
-KMS-21BM	Yes	KMS21BM_JCRB	KMS21BM_JCRB	Male	East Asia	IgD	Lambda	Lambda	None	t(11;14) + t(8;14)	6						Q61L - het (cc)			
-KMS-26	Yes	KMS26_JCRB	KMS26_JCRB	Male	East Asia	IgG	Kappa	Kappa	None	t(4;14) + t(8;22)				HD	Expressed				R175H - homo (CCLE)(cc)	Wt
-KMS-27	Yes	KMS27_JCRB	KMS27_JCRB	Male	East Asia		Kappa	Kappa	None	t(11;14)	6						Q61R - het (cc)		Splice-site + Splice-site (cc)	
-KMS-28BM	Yes	KMS28BM_JCRB	KMS28_Series	Female	East Asia	IgG	Lambda		None	t(4;14) + t(8;14)	3				Expressed	G12A - homo (cc)				Wt
-KMS-28PE	Yes	KMS28PE_JCRB	KMS28_Series	Female	East Asia	IgG	Lambda		None	t(4;14) + t(8;14)		HD			Expressed	G12A - homo (cc)			G105R - homo (cc)	Wt
-KMS-34	Yes	KMS34_JCRB	KMS34_JCRB	Female	East Asia	IgA	Kappa	Kappa	None	t(4;14)	3				Expressed				W146X - homo (CCLE)(cc)	S352N - het (cc) [see note]
+KMS-21BM	Yes	KMS21BM_JCRB	KMS21BM_JCRB	Male	East Asia	IgD	Lambda	Lambda	None	t(11;14)  t(8;14)	6						Q61L - het (cc)			
+KMS-26	Yes	KMS26_JCRB	KMS26_JCRB	Male	East Asia	IgG	Kappa	Kappa	None	t(4;14)  t(8;22)				HD	Expressed				R175H - homo (CCLE)(cc)	Wt
+KMS-27	Yes	KMS27_JCRB	KMS27_JCRB	Male	East Asia		Kappa	Kappa	None	t(11;14)	6						Q61R - het (cc)		Splice-site  Splice-site (cc)	
+KMS-28BM	Yes	KMS28BM_JCRB	KMS28_Series	Female	East Asia	IgG	Lambda		None	t(4;14)  t(8;14)	3				Expressed	G12A - homo (cc)				Wt
+KMS-28PE	Yes	KMS28PE_JCRB	KMS28_Series	Female	East Asia	IgG	Lambda		None	t(4;14)  t(8;14)		HD			Expressed	G12A - homo (cc)			G105R - homo (cc)	Wt
+KMS-34	Yes	KMS34_JCRB	KMS34_JCRB	Female	East Asia	IgA	Kappa	Kappa	None	t(4;14)	3				Expressed				W146X - homo (CCLE)(cc)	S352N - het (cc)
 KP-6	Yes	KP6_DJ	KP6_DJ	Male	Europe	IgG	Kappa	Kappa	IL6 (Independent in Keats Lab)		2			HD		G12D - homo (cc)				
 KPMM-2				Female		IgG	Lambda													
 L363	Yes	L363_DSMZ	L363_DSMZ	Female	Europe	IgG		Lambda	None	t(20;22)						Wt	Q61H - Het (cc)		S261T - Homo	Wt
-LP-1	Yes	LP1_DSMZ	LP1_DSMZ	Female	Europe	IgG	Lambda		None	t(4;14) + t(8;14)					F384L (1000G SNP)	Wt	Wt		E286K - Homo (cc)	K286IfsX7 - Homo (cc)
+LP-1	Yes	LP1_DSMZ	LP1_DSMZ	Female	Europe	IgG	Lambda		None	t(4;14)  t(8;14)					F384L (1000G SNP)	Wt	Wt		E286K - Homo (cc)	K286IfsX7 - Homo (cc)
 MDN										t(11:14)						Wt	G13D		Wt	
-MM-M1	Yes	MMM1_PLB	MMM1_PLB		East Asia			Lambda	None	t(11;14)							G12D - het (cc -see note)			Wt
-MM.1.144			MM1_Series	Female	Africa	IgA	Lambda			t(14;16) + t(8;14)				HD		G12A				K536-N545delinsD - Homo
-MM.1R	Yes	MM1R_ATCC	MM1_Series	Female	Africa	IgA	Lambda	Lambda	None	t(14;16) + t(8;14)	1			HD		G12A - het (cc)				K536-N545delinsD - Homo (cc)
-MM.1S	Yes	MM1S_ATCC	MM1_Series	Female	Africa	IgA	Lambda	Lambda	None	t(14:16) + t(8;14)	1			HD		G12A - het (cc)	Wt		Wt	K536-N545delinsD - Homo (cc)
+MM-M1	Yes	MMM1_PLB	MMM1_PLB		East Asia			Lambda	None	t(11;14)							G12D - het (cc)			Wt
+MM.1.144			MM1_Series	Female	Africa	IgA	Lambda			t(14;16)  t(8;14)				HD		G12A				K536-N545delinsD - Homo
+MM.1R	Yes	MM1R_ATCC	MM1_Series	Female	Africa	IgA	Lambda	Lambda	None	t(14;16)  t(8;14)	1			HD		G12A - het (cc)				K536-N545delinsD - Homo (cc)
+MM.1S	Yes	MM1S_ATCC	MM1_Series	Female	Africa	IgA	Lambda	Lambda	None	t(14:16)  t(8;14)	1			HD		G12A - het (cc)	Wt		Wt	K536-N545delinsD - Homo (cc)
 MOLP-2	Yes	MOLP2_DSMZ	MOLP2_DSMZ	Male	East Asia	IgD	Lambda	Lambda	None		2	BIRC3 - V120G - het (cc)		HD					A159V - homo (CCLE)(cc)	
 MOLP-8	Yes	MOLP8_DSMZ	MOLP8_DSMZ		East Asia			Lambda	None	t(11;14)	6					delK179 - het (cc)	Q61L - het (cc)			
 NAN1										t(14;16)						Wt	Wt		E180X	
@@ -58,23 +58,23 @@ NAN3										t(4;14)						Wt	Q61H		R248Q - Het
 NAN6										t(14;20)						Wt	Wt		HD	
 NCI-H929	Yes	NCIH929_DSMZ	NCIH929_DSMZ	Female	Europe	IgA	Kappa	Kappa	None	t(4;14)					Expressed	Wt	G13D - het (cc)		Wt	Wt
 OCI-MY1	Yes	OCIMY1_PLB	OCIMY1_PLB		Europe			Kappa	None	t(8;22)	2			HD		G13D - het (cc)			R280G - homo (cc)	HD
-OCI-MY5	Yes	OCIMY5_PLB	OCIMY5_PLB		Europe			Lambda	None	t(14;16) + t(8;14)				HD		Wt	Wt		FS - homo (cc)	Wt
+OCI-MY5	Yes	OCIMY5_PLB	OCIMY5_PLB		Europe			Lambda	None	t(14;16)  t(8;14)				HD		Wt	Wt		FS - homo (cc)	Wt
 OCI-MY7	Yes	OCIMY7_PLB	OCIMY7_PLB		Europe			Kappa	None	t(11;14)				HD			Q61K - het (cc)			Wt
-OH2	Yes	OH2_PLB	OH2_PLB	Female	Europe	IgG	Kappa	Kappa	IL6 (Dependent in Keats Lab)	t(14;20) + t(2;12)							Q61K -homo (cc)			
-OPM-1	Yes	OPM1_PLB	OPM_Series	Female	East Asia		Lambda	Lambda	None	t(4;14) + t(8;14)	3			HD	K650E - Het	Q71X			R175H - homo (cc)	Wt
-OPM-2	Yes	OPM2_DSMZ	OPM_Series	Female	East Asia		Lambda	Lambda	None	t(4;14) + t(8;14)				HD	K650E - Het	Wt	Wt		R175H - homo (CCLE)(cc)	Wt
+OH2	Yes	OH2_PLB	OH2_PLB	Female	Europe	IgG	Kappa	Kappa	IL6 (Dependent in Keats Lab)	t(14;20)  t(2;12)							Q61K -homo (cc)			
+OPM-1	Yes	OPM1_PLB	OPM_Series	Female	East Asia		Lambda	Lambda	None	t(4;14)  t(8;14)	3			HD	K650E - Het	Q71X			R175H - homo (cc)	Wt
+OPM-2	Yes	OPM2_DSMZ	OPM_Series	Female	East Asia		Lambda	Lambda	None	t(4;14)  t(8;14)				HD	K650E - Het	Wt	Wt		R175H - homo (CCLE)(cc)	Wt
 PCM-6	Yes	PCM6_RIKEN	PCM6_RIKEN	Female	East Asia	IgG	Lambda	Lambda	IL6 (Dependent in Keats Lab)	t(14;16)	7								R248Q (CCLE)	
 PE1	Yes	PE1_PLB	PE1_PLB		Europe			Kappa	IL6 (Dependent in Keats Lab)	t(11;14)						Wt	Wt		R280S - homo (cc)	Wt
 PE2	Yes	PE2_PLB	PE2_PLB		Africa			Kappa	IL6 (Independent in Keats Lab)	t(4;14)					Not Expressed		Q61K - het (cc)		G244V - homo (cc)	Wt
-RPMI-8226	Yes	RPMI8226_ATCC	8226_Series	Male	Africa	IgG	Lambda	Lambda	None	t(16;22) + t(8;22)				HD		G12A - Het (cc)	Wt		E285K - Homo (cc)	HD -> K191LfsX60
+RPMI-8226	Yes	RPMI8226_ATCC	8226_Series	Male	Africa	IgG	Lambda	Lambda	None	t(16;22)  t(8;22)				HD		G12A - Het (cc)	Wt		E285K - Homo (cc)	HD -> K191LfsX60
 SACHI				Female		IgG	Lambda			t(14;20)										Wt
 SBN																Wt	Wt		Wt	
-SKMM-1	Yes	SKMM1_PLB	SKMM1_PLB	Male	Africa		Kappa	Kappa	None	t(14;20) + t(8;14)		BIRC2 - C109F - homo (cc)				Wt	G12D - het (cc -see note)		R175G - het (cc)	Wt
+SKMM-1	Yes	SKMM1_PLB	SKMM1_PLB	Male	Africa		Kappa	Kappa	None	t(14;20)  t(8;14)		BIRC2 - C109F - homo (cc)				Wt	G12D - het (cc)		R175G - het (cc)	Wt
 SKMM-2	Yes	SKMM2_DSMZ	SKMM2_DSMZ	Male	Europe		Kappa	Kappa	None	t(11;14)				HD		Wt	Wt		K132N - Homo (cc)	Wt
-U-266	Yes	U266_ATCC	U266_ATCC	Male	Europe	IgE	Lambda	Lambda	None	t(11;14)***	5		K601N - Het (cc)			Wt	Wt	E419X - Homo & K228R - Homo (cc)	A161T - Homo (cc)	K550IfsX3 - Homo (cc)
-UTMC-2	Yes	UTMC2_PLB	UTMC2_PLB	Female	Europe	IgA	Kappa		IL6 (Independent in Keats Lab)	t(4;14)					Expressed	Wt	Wt	L185X - Homo (cc)	W246X - homo (cc) HD (?)	Wt
-VP-6	Yes	VP6_DJ	VP6_DJ		Europe			Lambda	IL6 (Independent in Keats Lab)	t(14;16) + t(8;14)	7								A161D - homo (cc)	
-XG-1	Yes	XG1_PLB	XG1_PLB	Male	Europe	IgA	Kappa	Kappa	IL6 (Independent in Keats Lab)	t(11;14) + t(8;14)						Wt	G12R - het (cc)		Y126N - homo (cc)	Wt
+U-266	Yes	U266_ATCC	U266_ATCC	Male	Europe	IgE	Lambda	Lambda	None	t(11;14)	5		K601N - Het (cc)			Wt	Wt	E419X - Homo & K228R - Homo (cc)	A161T - Homo (cc)	K550IfsX3 - Homo (cc)
+UTMC-2	Yes	UTMC2_PLB	UTMC2_PLB	Female	Europe	IgA	Kappa		IL6 (Independent in Keats Lab)	t(4;14)					Expressed	Wt	Wt	L185X - Homo (cc)	W246X - homo (cc) HD	Wt
+VP-6	Yes	VP6_DJ	VP6_DJ		Europe			Lambda	IL6 (Independent in Keats Lab)	t(14;16)  t(8;14)	7								A161D - homo (cc)	
+XG-1	Yes	XG1_PLB	XG1_PLB	Male	Europe	IgA	Kappa	Kappa	IL6 (Independent in Keats Lab)	t(11;14)  t(8;14)						Wt	G12R - het (cc)		Y126N - homo (cc)	Wt
 XG-10																S13C - Het	Wt		Wt	
 XG-11										t(11:14)						Wt	Wt		C135Y	
 XG-12										t(14;16)						Wt	Q61L		Wt	
@@ -82,7 +82,7 @@ XG-13										t(14;16)						Wt	Wt		R248Q
 XG-14										t(11;14)						Wt	Q61L - Het		G266E	
 XG-16																Wt	Q61H		Y220C	
 XG-19										t(14;16)						Wt	Wt		Wt	
-XG-2	Yes	XG2_PLB	XG2_PLB	Female	Europe	IgG	Lambda	Lambda	IL6 (Independent in Keats Lab)	t(20:22) [MAFB&CD40]						G12A - het (cc)	Wt		R213X - het + C176Y - het (cc)	Wt
+XG-2	Yes	XG2_PLB	XG2_PLB	Female	Europe	IgG	Lambda	Lambda	IL6 (Independent in Keats Lab)	t(20:22) [MAFB&CD40]						G12A - het (cc)	Wt		R213X - het  C176Y - het (cc)	Wt
 XG-20										t(4;14)						Wt	Wt		HD	
 XG-21										t(11;14)						Wt	Wt		Wt	
 XG-24										t(4;14)						G12V - Het	Wt		Wt	
