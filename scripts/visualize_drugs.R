@@ -114,7 +114,7 @@ ggplot(df_pca, aes(x=PC1, y=PC2, color=cluster)) +
         legend.text=element_text(size=rel(1.2)),
         legend.title=element_text(size=rel(1.2)))
 
-ggsave(snakemake@output[[1]], width=1440, height=810, units="px", dpi=128)
+ggsave(snakemake@output[[1]], width=3375, height=1900, units="px", dpi=300, device="tiff")
 
 # 2) UMAP plot (color = cluster)
 df_umap <- drug_umap %>%
@@ -132,7 +132,7 @@ ggplot(df_umap, aes(x=UMAP1, y=UMAP2, color=cluster)) +
         legend.text=element_text(size=rel(1.2)),
         legend.title=element_text(size=rel(1.2)))
 
-ggsave(snakemake@output[[2]], width=1440, height=810, units="px", dpi=128)
+ggsave(snakemake@output[[2]], width=3375, height=1900, units="px", dpi=300, device="tiff")
 
 # 3) Mean cell line AC-50 by cluster
 drug_curves_ac50 <- drug_curves %>%
@@ -186,7 +186,7 @@ ggplot(average_ac50, aes(x=cell_line, y=ac50, fill=cell_cluster)) +
   xlab("Human Myeloma Cell Line") +
   ylab("AC-50 (nM)") +
   facet_wrap2(~cluster, strip=strip)
-ggsave(snakemake@output[[3]], width=2160, height=1215, units="px", dpi=192)
+ggsave(snakemake@output[[3]], width=3375, height=1900, units="px", dpi=300, device="tiff")
 
 # 4) drug curves visualized for each cluster, averaged across all cell lines
 drug_mat_all <- drug_curves %>%
@@ -249,7 +249,7 @@ ggplot(drug_mat_all, aes(x=dose, y=viability, group=drug_id)) +
         legend.text=element_text(size=rel(1.2)),
         strip.text=element_text(face="bold", size=rel(0.75))) +
   facet_wrap2(~cluster, strip=strip)
-ggsave(snakemake@output[[4]], width=1920, height=1620, units="px", dpi=288)
+ggsave(snakemake@output[[4]], width=1920, height=1620, units="px", dpi=300, device="tiff")
 
 # 5) average drug ac-50 (by cell line cluster)
 clust1_cells <- cell_clusters %>%
@@ -284,7 +284,7 @@ ggplot(cluster_df, aes(x=median_ac50, fill=Cluster, group=Cluster)) +
   ylab("Count") +
   ggtitle("Median AC-50 (By cell line cluster)")
 
-ggsave(snakemake@output[[5]], width=1920, height=1080, units="px", dpi=192)
+ggsave(snakemake@output[[5]], width=3000, height=1700, units="px", dpi=300, device="tiff")
 
 # 6+) drug curves visualized for each cluster and for each cell line
 drug_mat <- drug_curves %>%
@@ -319,7 +319,7 @@ for (cell in unique(drug_mat$cell_line)) {
     ggtitle(sprintf("Average drug response by cluster (%s)", cell)) +
     facet_wrap(~cluster, ncol=3)
 
-  outfile <- sub("all_cells", cell, snakemake@output[[4]])
+  outfile <- sub("tiff", "png", sub("all_cells", cell, snakemake@output[[4]]))
   ggsave(outfile, width=1080, height=1080, units="px", dpi=92)
 }
 

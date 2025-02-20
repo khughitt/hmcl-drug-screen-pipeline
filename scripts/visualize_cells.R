@@ -58,7 +58,7 @@ ggplot(df_pca, aes(x=PC1, y=PC2, color=cluster)) +
         legend.text=element_text(size=rel(1.2)),
         legend.title=element_text(size=rel(1.2)))
 
-ggsave(snakemake@output[[1]], width=1440, height=810, units="px", dpi=128)
+ggsave(snakemake@output[[1]], width=3375, height=1900, units="px", dpi=300, device="tiff")
 
 # 2) UMAP plot
 df_umap <- cell_umap %>%
@@ -78,7 +78,7 @@ ggplot(df_umap, aes(x=UMAP1, y=UMAP2, color=cluster)) +
         legend.text=element_text(size=rel(1.3)),
         legend.title=element_text(size=rel(1.2)))
 
-ggsave(snakemake@output[[2]], width=1440, height=810, units="px", dpi=128)
+ggsave(snakemake@output[[2]], width=3375, height=1900, units="px", dpi=300, device="tiff")
 
 # 3) average cell viability plot
 
@@ -101,7 +101,7 @@ ggplot(cell_factors, aes(x=Dose, y=Viability, group=`Cell Line`, color=`Cell Lin
   xlab("Concentration (nM)") +
   ylab("Mean cell viability (scaled)")
 
-ggsave(snakemake@output[[3]], width=1920, height=1080, units="px", dpi=192)
+ggsave(snakemake@output[[3]], width=3000, height=1690, units="px", dpi=300, device="tiff")
 
 # 4) average cell viability plot (by cell line cluster)
 cell_factors$Cluster <- cell_clusters$cluster[match(cell_factors$`Cell Line`, cell_clusters$cell)]
@@ -117,4 +117,4 @@ ggplot(cell_factors, aes(x=Dose, y=Viability, group=`Cell Line`, color=`Cluster`
   xlab("Concentration (nM)") +
   ylab("Mean cell viability (scaled)")
 
-ggsave(snakemake@output[[4]], width=1920, height=1080, units="px", dpi=192)
+ggsave(snakemake@output[[4]], width=3000, height=1690, units="px", dpi=300, device="tiff")

@@ -32,12 +32,15 @@ response_fields = ["ac50", "lac50"] + [f"dose_{i}" for i in range(num_conc)]
 
 rule all:
     input:
-        out_dir.joinpath("fig/drugs/drug_umap_clusters.png"),
-        out_dir.joinpath("fig/drugs/drug_cluster_mean_ac50.png"),
-        out_dir.joinpath("fig/drugs/drug_curves_by_cluster_all_cells.png"),
-        out_dir.joinpath("fig/drugs/drug_median_ac50_by_cell_cluster.png"),
-        out_dir.joinpath("fig/cells/cell_average_viability.png"),
-        out_dir.joinpath("fig/cells/cell_average_viability_by_cluster.png"),
+        out_dir.joinpath("fig/drugs/drug_pca_clusters.tiff"),
+        out_dir.joinpath("fig/drugs/drug_umap_clusters.tiff"),
+        out_dir.joinpath("fig/drugs/drug_cluster_mean_ac50.tiff"),
+        out_dir.joinpath("fig/drugs/drug_curves_by_cluster_all_cells.tiff"),
+        out_dir.joinpath("fig/drugs/drug_median_ac50_by_cell_cluster.tiff"),
+        out_dir.joinpath("fig/cells/cell_pca_clusters.tiff"),
+        out_dir.joinpath("fig/cells/cell_umap_clusters.tiff"),
+        out_dir.joinpath("fig/cells/cell_average_viability.tiff"),
+        out_dir.joinpath("fig/cells/cell_average_viability_by_cluster.tiff"),
         out_dir.joinpath("fig/plates/mean_plate.png"),
         out_dir.joinpath("xlsx/drug_ac50.xlsx"),
         out_dir.joinpath("xlsx/drug_clusters.xlsx"),
@@ -121,11 +124,11 @@ rule visualize_drugs:
         out_dir.joinpath("clusters/cells.tsv"),
         out_dir.joinpath("metadata/drug-metadata.tsv")
     output:
-        out_dir.joinpath("fig/drugs/drug_pca_clusters.png"),
-        out_dir.joinpath("fig/drugs/drug_umap_clusters.png"),
-        out_dir.joinpath("fig/drugs/drug_cluster_mean_ac50.png"),
-        out_dir.joinpath("fig/drugs/drug_curves_by_cluster_all_cells.png"),
-        out_dir.joinpath("fig/drugs/drug_median_ac50_by_cell_cluster.png"),
+        out_dir.joinpath("fig/drugs/drug_pca_clusters.tiff"),
+        out_dir.joinpath("fig/drugs/drug_umap_clusters.tiff"),
+        out_dir.joinpath("fig/drugs/drug_cluster_mean_ac50.tiff"),
+        out_dir.joinpath("fig/drugs/drug_curves_by_cluster_all_cells.tiff"),
+        out_dir.joinpath("fig/drugs/drug_median_ac50_by_cell_cluster.tiff"),
         cell_filepaths
     script:
         "scripts/visualize_drugs.R"
@@ -139,10 +142,10 @@ rule visualize_cells:
         out_dir.joinpath("cell_viability/average_cell_viability.tsv"),
         out_dir.joinpath("metadata/cell-metadata.tsv")
     output:
-        out_dir.joinpath("fig/cells/cell_pca_clusters.png"),
-        out_dir.joinpath("fig/cells/cell_umap_clusters.png"),
-        out_dir.joinpath("fig/cells/cell_average_viability.png"),
-        out_dir.joinpath("fig/cells/cell_average_viability_by_cluster.png")
+        out_dir.joinpath("fig/cells/cell_pca_clusters.tiff"),
+        out_dir.joinpath("fig/cells/cell_umap_clusters.tiff"),
+        out_dir.joinpath("fig/cells/cell_average_viability.tiff"),
+        out_dir.joinpath("fig/cells/cell_average_viability_by_cluster.tiff")
     script:
         "scripts/visualize_cells.R"
 
