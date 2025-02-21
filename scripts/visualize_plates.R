@@ -48,17 +48,15 @@ for (plate_id in snakemake@params[["plate_ids"]]) {
   colnames(normed_plate) <- cnames
   colnames(bgadj_plate) <- cnames
 
-  outfile <- file.path(out_dir, sprintf("%s.png", plate_id))
-
-  message(outfile)
+  outfile <- file.path(out_dir, sprintf("%s.jpg", plate_id))
 
   # include cell line in figure title
   cell_line <- plate_mdata$cell_line[match(plate_id, plate_mdata$plate)]
   plt_title <- sprintf("%s (%s)", plate_id, cell_line)
 
-  png(outfile, width=1920, height=1080)
+  jpeg(outfile, width=1920, height=1080)
 
-  # generate plots of plate at each step of processing, along with the background image used
+  # generate plots of plate at each step of processing
   plts <- list()
 
   plts[[1]] <- levelplot(t(raw_plate), col.regions=plasma(500),

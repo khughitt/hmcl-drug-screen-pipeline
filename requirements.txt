@@ -8,11 +8,5 @@ r-drc
 r-ggh4x
 r-ggrepel
 r-lattice
-r-nmf
-r-uwot
 r-rspectra
 r-viridis
-r-openxlsx
-xlrd
-xlwt
-openpyxl
